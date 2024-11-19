@@ -2,12 +2,13 @@ package models;
 
 import java.util.*;
 
+
 public class Conference {
     private int conferenceID;
     private String name;
     private String room;
     private String description;
-    private String List<Session> sessions;
+    private List<Session> sessions;
 
     public Conference(int conferenceID, String name, String room, String description) {
         this.conferenceID = conferenceID;
@@ -21,8 +22,9 @@ public class Conference {
         return sessions.add(session);
     }
 
-    public boolean removeSession(int sessionID){
-        reutrn sessions.removeIf(session -> session.getSessionID == sessionID);
+    //return type converted to void instead of boolean
+    public void removeSession(int sessionID){
+    sessions.removeIf(session -> session.getSessionID() == sessionID);
     }
 
     public List<Session> getSessions(){

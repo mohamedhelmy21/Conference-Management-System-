@@ -16,11 +16,12 @@ public class Attendee extends User{
         this.certificate = new ArrayList<>();
     }
 
-    public boolean registerForSession(Session session){
-        return schedule.addSession(session);
+    //return type changed to void instead if boolean
+    public void registerForSession(Session session){
+        schedule.addSession(session);
     }
 
-    public boolean submitFeedback(int sessionID, Feedback feedback){
+    public void submitFeedback(int sessionID, Feedback feedback){
         //Add feedback logic
         feedbacks.add(feedback);
     }
