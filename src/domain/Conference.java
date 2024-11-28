@@ -1,7 +1,7 @@
-package models;
+package domain;
 
 import java.util.*;
-
+import java.time.LocalDateTime;
 
 public class Conference {
     private int conferenceID;

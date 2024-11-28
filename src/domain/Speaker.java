@@ -1,24 +1,27 @@
-package models;
+package domain;
 
+import observer.Observer;
 import enums.Role;
 import java.util.*;
 
-public class Speaker extends User {
+public class Speaker extends User implements Observer{
     private String bio;
     private String expertise;
     private String organization;
-    private List<Session> sessions;
+    private List<Integer> sessionIDs;
 
     public Speaker(int userID, String name, String email, String password, Role role, String bio, String expertise, String organization) {
         super(userID, name, email, password, role.SPEAKER);
         this.bio = bio;
         this.expertise = expertise;
         this.organization = organization;
-        this.sessions = new ArrayList<>();
+        this.sessionIDs = new ArrayList<>();
     }
 
-    public boolean addSession(Session session){
-        return sessions.add(session);
+    public void addSession(int sessionID){
+        if (!sessionIDs.contains(sessionID)) {
+            sessionIDs.add(sessionID);
+        }
     }
 
     public boolean updateBio(String newBio){
@@ -26,8 +29,8 @@ public class Speaker extends User {
         return true;
     }
 
-    public List<Session> getUpcomingSessions(){
-        return sessions;
+    public List<Integer> getUpcomingSessions(){
+        return sessionIDs;
     }
 
     public String getBio() {
@@ -40,5 +43,10 @@ public class Speaker extends User {
 
     public String getExpertise() {
         return expertise;
+    }
+
+    @Override
+    public void notify(String message) {
+        System.out.println("Notification to Speaker " + getName() + ": " + message);
     }
 }

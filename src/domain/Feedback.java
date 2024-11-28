@@ -1,7 +1,7 @@
-package models;
+package domain;
 
 import enums.Rating;
-import java.util.*;
+
 import java.time.LocalDateTime;
 
 public class Feedback {

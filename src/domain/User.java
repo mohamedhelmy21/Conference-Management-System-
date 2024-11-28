@@ -1,4 +1,4 @@
-package models;
+package domain;
 import enums.Role;
 
 public class User {
@@ -7,7 +7,6 @@ public class User {
     private String email;
     private String password;
     private Role role;
-    private boolean isActive;
 
     public User(int userID, String name, String email, String password, Role role) {
         this.userID = userID;
@@ -15,17 +14,8 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.isActive = true;
     }
 
-    public boolean login() {
-        return this.email.equals(email) && this.password.equals(password);
-    }
-
-    public boolean logout(){
-        this.isActive = false;
-        return true;
-    }
 
     public boolean updateProfile(String name, String email, String password) {
         this.name=name;
@@ -74,7 +64,6 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
-                ", isActive=" + isActive +
                 '}';
     }
 }
