@@ -27,13 +27,6 @@ public class Schedule {
     }
 
 
-    //consider implementing later
-    public List<Integer> getConflicts() {
-        // Basic conflict resolution: two sessionIDs at the same time
-        List<Integer> conflicts = new ArrayList<>();
-        return conflicts;
-     }
-
     public boolean containsSession(int sessionID) {
         return sessionIDs.contains(sessionID);
     }

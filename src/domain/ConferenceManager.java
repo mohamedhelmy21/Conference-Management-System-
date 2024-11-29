@@ -11,10 +11,6 @@ public class ConferenceManager extends User{
         this.managedConferenceIDs = new ArrayList<>();
     }
 
-    public boolean createSession(Session session, Conference conference){
-        return conference.addSession(session);
-    }
-
     public void assignManagerToConference(int conferenceID){
         if (!managedConferenceIDs.contains(conferenceID)) {
             managedConferenceIDs.add(conferenceID);

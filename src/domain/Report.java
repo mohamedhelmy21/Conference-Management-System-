@@ -7,19 +7,33 @@ public class Report {
     private String content;
     private LocalDateTime generatedDate;
     private String author;
+    private int averageRating;
 
-    public Report(int reportID, String content, String author) {
+    public Report(int reportID, String content, String author, int averageRating) {
         this.reportID = reportID;
         this.content = content;
         this.generatedDate = LocalDateTime.now();
         this.author = author;
+        this.averageRating = averageRating;
     }
 
-    public void generateReport() {
-        // Logic for report generation
+    public int getReportID() {
+        return reportID;
     }
 
-    public void exportReport(String format) {
-        System.out.println("Report exported in format: " + format);
+    public String getContent() {
+        return content;
+    }
+
+    public LocalDateTime getGeneratedDate() {
+        return generatedDate;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public int getAverageRating() {
+        return averageRating;
     }
 }

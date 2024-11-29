@@ -23,10 +23,6 @@ public class Feedback {
         this.isAnonymous = isAnonymous;
     }
 
-    public void submitFeedback() {
-        //pending logic
-    }
-
     public void updateFeedback(String comments, Rating rating){
         this.comments = comments;
         this.rating = rating;

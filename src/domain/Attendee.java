@@ -37,28 +37,9 @@ public class Attendee extends User implements Observer{
         }
     }
 
-    /**
-     * Registers the attendee for a session.
-     *
-     * @param sessionID ID of the session to register for.
-     * @param session   The session object to notify (optional).
-     */
-    public void registerForSession(int sessionID, Session session) {
-        if (!schedule.containsSession(sessionID)) {
-            schedule.addSession(sessionID); // Add to schedule
-            if (session != null) {
-                session.registerAttendee(getUserID()); // Notify the session
-            }
-        }
-    }
-
-
-
-
-    public void submitFeedback(int feedbackID){
+    public void addFeedback(int feedbackID){
         feedbacks.add(feedbackID);
     }
-
 
     @Override
     public void notify(String message) {

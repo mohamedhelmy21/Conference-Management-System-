@@ -56,6 +56,10 @@ public class User {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
     @Override
     public String toString() {
         return "User{" +

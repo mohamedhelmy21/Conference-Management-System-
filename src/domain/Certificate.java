@@ -26,11 +26,27 @@ public class Certificate {
         return !sessionsAttended.isEmpty();
     }
 
-    //generate certificate method is lacking
-
     public void downloadCertificate() {
         System.out.println("Certificate downloaded: " + certificateNumber);
     }
 
+    public int getCertificateID() {
+        return certificateID;
+    }
 
+    public int getAttendeeID() {
+        return attendeeID;
+    }
+
+    public LocalDateTime getIssueDate() {
+        return issueDate;
+    }
+
+    public List<Session> getSessionsAttended() {
+        return sessionsAttended;
+    }
+
+    public String getCertificateNumber() {
+        return certificateNumber;
+    }
 }

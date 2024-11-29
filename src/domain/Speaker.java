@@ -18,12 +18,6 @@ public class Speaker extends User implements Observer{
         this.sessionIDs = new ArrayList<>();
     }
 
-    public void addSession(int sessionID){
-        if (!sessionIDs.contains(sessionID)) {
-            sessionIDs.add(sessionID);
-        }
-    }
-
     public boolean updateBio(String newBio){
         bio = newBio;
         return true;
