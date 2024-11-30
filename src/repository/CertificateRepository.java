@@ -38,6 +38,17 @@ public class CertificateRepository {
         return objectMapper.readValue(file, listType);
     }
 
+    public int generateCertificateID() throws IOException {
+        List<Certificate> certificates = findAll();
+        if (certificates.isEmpty()) {
+            return 1;
+        }
+        return certificates.stream()
+                .mapToInt(Certificate::getCertificateID)
+                .max()
+                .orElse(0) + 1;
+    }
+
     public Certificate findById(int certificateId) throws IOException {
         return findAll().stream().filter(certificate -> certificate.getCertificateID() == certificateId).findFirst().orElse(null);
     }

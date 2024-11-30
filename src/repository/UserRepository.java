@@ -29,6 +29,23 @@ public class UserRepository {
         return objectMapper.readValue(file, listType);
     }
 
+    /**
+     * Generates a unique user ID.
+     *
+     * @return A new unique user ID.
+     * @throws IOException If there is an issue reading from the repository.
+     */
+    public int generateUserID() throws IOException {
+        List<User> users = findAll();
+        if (users.isEmpty()) {
+            return 1; // Start with ID 1 if the repository is empty
+        }
+        return users.stream()
+                .mapToInt(User::getUserID)
+                .max()
+                .orElse(0) + 1; // Increment the highest existing ID
+    }
+
     // Retrieve a user by ID
     public User findById(int userId) throws IOException {
         return findAll().stream().filter(user -> user.getUserID() == userId).findFirst().orElse(null);

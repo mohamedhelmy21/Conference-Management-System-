@@ -39,6 +39,18 @@ public class ReportRepository {
         return objectMapper.readValue(file, listType);
     }
 
+    public int generateReportID() throws IOException {
+        List<Report> reports = findAll();
+        if (reports.isEmpty()) {
+            return 1;
+        }
+        return reports.stream()
+                .mapToInt(Report::getReportID)
+                .max()
+                .orElse(0) + 1;
+    }
+
+
     public Report findById(int reportId) throws IOException {
         return findAll().stream().filter(report -> report.getReportID() == reportId).findFirst().orElse(null);
     }

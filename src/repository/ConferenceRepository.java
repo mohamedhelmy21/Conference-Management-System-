@@ -35,6 +35,17 @@ public class ConferenceRepository {
         return objectMapper.readValue(file, listType);
     }
 
+    public int generateConferenceID() throws IOException {
+        List<Conference> conferences = findAll();
+        if (conferences.isEmpty()) {
+            return 1;
+        }
+        return conferences.stream()
+                .mapToInt(Conference::getConferenceID)
+                .max()
+                .orElse(0) + 1;
+    }
+
     public Conference findById(int conferenceId) throws IOException {
         return findAll().stream().filter(conference -> conference.getConferenceID() == conferenceId).findFirst().orElse(null);
     }

@@ -38,6 +38,17 @@ public class FeedbackRepository {
         return objectMapper.readValue(file, listType);
     }
 
+    public int generateFeedbackID() throws IOException {
+        List<Feedback> feedbacks = findAll();
+        if (feedbacks.isEmpty()) {
+            return 1;
+        }
+        return feedbacks.stream()
+                .mapToInt(Feedback::getFeedbackID)
+                .max()
+                .orElse(0) + 1;
+    }
+
     public Feedback findById(int feedbackId) throws IOException {
         return findAll().stream().filter(feedback -> feedback.getFeedbackID() == feedbackId).findFirst().orElse(null);
     }

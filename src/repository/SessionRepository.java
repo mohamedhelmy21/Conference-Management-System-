@@ -38,6 +38,17 @@ public class SessionRepository {
         return objectMapper.readValue(file, listType);
     }
 
+    public int generateSessionID() throws IOException {
+        List<Session> sessions = findAll();
+        if (sessions.isEmpty()) {
+            return 1;
+        }
+        return sessions.stream()
+                .mapToInt(Session::getSessionID)
+                .max()
+                .orElse(0) + 1;
+    }
+
     public Session findById(int sessionId) throws IOException {
         return findAll().stream().filter(session -> session.getSessionID() == sessionId).findFirst().orElse(null);
     }
