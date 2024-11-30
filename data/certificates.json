@@ -1,0 +1,18 @@
+[ {
+  "certificateID" : 401,
+  "attendeeID" : 1,
+  "issueDate" : "2024-11-30T03:04:50.5509497",
+  "sessionsAttended" : [ {
+    "sessionID" : 201,
+    "name" : "Introduction to LLMs",
+    "dateTime" : "2025-05-10T10:00:00",
+    "room" : "Room A",
+    "capacity" : 100,
+    "availableSeats" : 100,
+    "attendeeIDs" : [ ],
+    "speakerID" : 1,
+    "description" : "Learn the basics of LLMs",
+    "feedbacks" : [ ]
+  } ],
+  "certificateNumber" : "CERT-1-1732928690551"
+} ]

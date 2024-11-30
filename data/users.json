@@ -1,0 +1,13 @@
+[ {
+  "userID" : 2,
+  "name" : "Bob",
+  "email" : "bob@example.com",
+  "password" : "securepassword",
+  "role" : "SPEAKER"
+}, {
+  "userID" : 1,
+  "name" : "Alice",
+  "email" : "alice.newemail@example.com",
+  "password" : "password123",
+  "role" : "ATTENDEE"
+} ]

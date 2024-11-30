@@ -10,6 +10,10 @@ public class Certificate {
     private List<Session> sessionsAttended;
     private String certificateNumber;
 
+    public Certificate() {
+        //default constructor
+    }
+
     public Certificate(int certificateID, int attendeeID, List<Session> sessionsAttended) {
         this.certificateID = certificateID;
         this.attendeeID = attendeeID;
@@ -48,5 +52,26 @@ public class Certificate {
 
     public String getCertificateNumber() {
         return certificateNumber;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder certificateText = new StringBuilder();
+        certificateText.append("Certificate of Attendance\n")
+                .append("---------------------------\n")
+                .append("Certificate ID: ").append(certificateID).append("\n")
+                .append("Certificate Number: ").append(certificateNumber).append("\n")
+                .append("Attendee ID: ").append(attendeeID).append("\n")
+                .append("Issued Date: ").append(issueDate).append("\n")
+                .append("Sessions Attended:\n");
+
+        for (Session session : sessionsAttended) {
+            certificateText.append("- ").append(session.getName())
+                    .append(" (").append(session.getDateTime()).append(")\n");
+        }
+
+        certificateText.append("\nThank you for participating in our conference!");
+
+        return certificateText.toString();
     }
 }

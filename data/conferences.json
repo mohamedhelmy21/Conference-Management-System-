@@ -1,0 +1,10 @@
+[ {
+  "conferenceID" : 101,
+  "name" : "GAF-AI 2025",
+  "description" : "Updated AI advancements description",
+  "startDate" : [ 2025, 5, 10, 9, 0 ],
+  "endDate" : [ 2025, 5, 15, 18, 0 ],
+  "sessionsIDs" : [ ],
+  "attendeesIDs" : [ ],
+  "managersIDs" : [ 1, 2 ]
+} ]

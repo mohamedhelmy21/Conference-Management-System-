@@ -17,6 +17,10 @@ public class Conference implements Subject{
     private List<Integer> managersIDs;
     private List<Observer> observers;
 
+    public Conference() {
+        //default constructor
+    }
+
     public Conference(int conferenceID, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.conferenceID = conferenceID;
         this.name = name;
@@ -59,6 +63,38 @@ public class Conference implements Subject{
 
     public List<Integer> getManagersIDs() {
         return managersIDs;
+    }
+
+    public void setConferenceID(int conferenceID) {
+        this.conferenceID = conferenceID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setSessionsIDs(List<Integer> sessionsIDs) {
+        this.sessionsIDs = sessionsIDs;
+    }
+
+    public void setAttendeesIDs(List<Integer> attendeesIDs) {
+        this.attendeesIDs = attendeesIDs;
+    }
+
+    public void setManagersIDs(List<Integer> managersIDs) {
+        this.managersIDs = managersIDs;
     }
 
     // Add a session to the conference

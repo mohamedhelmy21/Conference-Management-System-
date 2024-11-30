@@ -1,0 +1,12 @@
+[ {
+  "sessionID" : 201,
+  "name" : "Introduction to LLMs",
+  "dateTime" : "2025-05-10T10:00:00",
+  "room" : "Room C",
+  "capacity" : 100,
+  "availableSeats" : 100,
+  "attendeeIDs" : [ ],
+  "speakerID" : 1,
+  "description" : "Learn the basics of Large Language Models",
+  "feedbacks" : [ ]
+} ]

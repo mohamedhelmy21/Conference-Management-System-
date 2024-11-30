@@ -13,6 +13,10 @@ public class Feedback {
     private LocalDateTime submissionTime;
     private boolean isAnonymous;
 
+    public Feedback() {
+        //default constructor
+    }
+
     public Feedback(int feedbackID, int attendeeID, int sessionID, String comments, Rating rating, boolean isAnonymous) {
         this.feedbackID = feedbackID;
         this.attendeeID = attendeeID;

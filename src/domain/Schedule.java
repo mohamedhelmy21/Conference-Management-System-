@@ -42,4 +42,11 @@ public class Schedule {
         }
         return scheduleDetails.toString();
     }
+
+    @Override
+    public String toString() {
+        return "Schedule:" +
+                "Sessions:" + sessionIDs
+                ;
+    }
 }

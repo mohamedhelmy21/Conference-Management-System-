@@ -9,6 +9,10 @@ public class Report {
     private String author;
     private int averageRating;
 
+    public Report() {
+        //default constructor
+    }
+
     public Report(int reportID, String content, String author, int averageRating) {
         this.reportID = reportID;
         this.content = content;

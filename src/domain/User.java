@@ -8,6 +8,10 @@ public class User {
     private String password;
     private Role role;
 
+    public User() {
+        //default constructor
+    }
+
     public User(int userID, String name, String email, String password, Role role) {
         this.userID = userID;
         this.name = name;

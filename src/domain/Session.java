@@ -5,17 +5,24 @@ import observer.Subject;
 import java.util.*;
 import java.time.LocalDateTime;
 
+
 public class Session implements Subject{
     private int sessionID;
     private String name;
     private LocalDateTime dateTime;
     private String room;
     private int capacity;
+    private int availableSeats;
     private List<Integer> attendeeIDs;
     private int speakerID;
     private String description;
     private List<Observer> observers;
     private List<Integer> feedbacks;
+
+
+    public Session() {
+        //default constructor
+    }
 
     public Session(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description) {
         this.sessionID = sessionID;
@@ -28,6 +35,7 @@ public class Session implements Subject{
         this.description = description;
         this.observers = new ArrayList<>();
         this.feedbacks = new ArrayList<>();
+        this.availableSeats = capacity;
     }
 
     public boolean registerAttendee(int attendeeID) {
@@ -48,7 +56,8 @@ public class Session implements Subject{
     }
 
     public int getAvailableSeats(){
-        return capacity - attendeeIDs.size();
+        availableSeats = capacity - attendeeIDs.size();
+        return availableSeats;
     }
 
     public void addFeedback(int feedbackID) {
@@ -140,5 +149,19 @@ public class Session implements Subject{
         for (Observer observer : observers) {
             observer.notify(message);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "name='" + name + '\'' +
+                ", dateTime=" + dateTime +
+                ", room='" + room + '\'' +
+                ", capacity=" + capacity +
+                ", availableSeats=" + availableSeats +
+                ", speakerID=" + speakerID +
+                ", description='" + description + '\'' +
+                ", sessionID=" + sessionID +
+                '}';
     }
 }
