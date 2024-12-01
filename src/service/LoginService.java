@@ -34,6 +34,10 @@ public class LoginService {
             throw new UnsupportedOperationException("Managers cannot self-register");
         }
 
+        if (role == Role.SPEAKER){
+            throw new UnsupportedOperationException("Speakers cannot self-register");
+        }
+
         if (userRepository.findByEmail(email) != null){
             throw new UserAlreadyExistsException("User already exists");
         }
