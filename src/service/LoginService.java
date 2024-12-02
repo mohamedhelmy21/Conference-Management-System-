@@ -7,6 +7,7 @@ import domain.User;
 import exception.UserNotFoundException;
 import exception.IncorrectPasswordException;
 import exception.UserAlreadyExistsException;
+import utility.IDGenerator;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,8 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO authenticate(String email, String password) throws IOException, UserNotFoundException, IncorrectPasswordException{
+    //LogIn and authenticate user
+    public UserDTO logIn(String email, String password) throws IOException, UserNotFoundException, IncorrectPasswordException{
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User does not exist");
@@ -42,7 +44,7 @@ public class LoginService {
             throw new UserAlreadyExistsException("User already exists");
         }
 
-        int newUserId = generateUserId();
+        int newUserId = IDGenerator.generateId("User");
         User newUser = new User(newUserId, name, email, password, role);
         userRepository.save(newUser);
 

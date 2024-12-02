@@ -2,14 +2,13 @@ package service;
 
 import dto.ConferenceDTO;
 
+import utility.IDGenerator;
 import domain.Conference;
-import domain.Attendee;
 import repository.ConferenceRepository;
 import repository.UserRepository;
 import exception.RepositoryException;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class ConferenceService {
     public Conference createConference(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int managerID) {
         try {
 
-            int conferenceID = generateConferenceID();
+            int conferenceID = IDGenerator.generateId("Conference");
 
             validateConferenceDetails(name, startDate, endDate);
 
@@ -75,28 +74,13 @@ public class ConferenceService {
         }
     }
 
-    private int generateConferenceID() {
-        try {
-            List<Conference> allConferences = conferenceRepository.findAll();
-            if (allConferences.isEmpty()) {
-                return 101; // Start ID from 101 as per the scenario
-            }
-            return allConferences.stream()
-                    .mapToInt(Conference::getConferenceID)
-                    .max()
-                    .orElse(100) + 1;
-        } catch (IOException e) {
-            throw new RepositoryException("Error generating conference ID.", e);
-        }
-    }
-
     public ConferenceDTO findConferenceByID(int conferenceID) {
         try {
             Conference conference = conferenceRepository.findById(conferenceID);
             if (conference == null) {
                 throw new IllegalArgumentException("Conference not found.");
             }
-            return convertToDTO(conference);
+            return mapToDTO(conference);
         } catch (IOException e) {
             throw new RepositoryException("Error finding conference by ID.", e);
         }
@@ -111,7 +95,7 @@ public class ConferenceService {
         }
     }
 
-    private ConferenceDTO convertToDTO(Conference conference) {
+    private ConferenceDTO mapToDTO(Conference conference) {
         return new ConferenceDTO(conference.getConferenceID(),
           conference.getName(),
           conference.getDescription(),
