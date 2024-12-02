@@ -13,7 +13,8 @@ public class Session implements Subject{
     private String room;
     private int capacity;
     private int availableSeats;
-    private List<Integer> attendeeIDs;
+    private List<Integer> signedUpAttendees;
+    private List<Integer> attendedAttendees;
     private int speakerID;
     private String description;
     private List<Observer> observers;
@@ -30,7 +31,8 @@ public class Session implements Subject{
         this.dateTime = dateTime;
         this.room = room;
         this.capacity = capacity;
-        this.attendeeIDs = new ArrayList<>();
+        this.signedUpAttendees = new ArrayList<>();
+        this.attendedAttendees = new ArrayList<>();
         this.speakerID = speakerID;
         this.description = description;
         this.observers = new ArrayList<>();
@@ -38,25 +40,40 @@ public class Session implements Subject{
         this.availableSeats = capacity;
     }
 
-    public boolean registerAttendee(int attendeeID) {
-        if (attendeeIDs.size() < capacity && !attendeeIDs.contains(attendeeID)) {
-            attendeeIDs.add(attendeeID);
+    public boolean addToSignedUp(int attendeeID){
+        if(signedUpAttendees.size() >= capacity){
+            return false;
+        }
+        if (!signedUpAttendees.contains(attendeeID)) {
+            signedUpAttendees.add(attendeeID);
             return true;
         }
         return false;
     }
 
-    public void removeAttendee(int attendeeID) {
-        if (attendeeIDs.contains(attendeeID)) {
-            attendeeIDs.remove(Integer.valueOf(attendeeID)); // Remove attendee
-            notifyObservers("Attendee removed: ID " + attendeeID); // Notify observers
-        } else {
-            System.out.println("Attendee with ID " + attendeeID + " is not registered for this session.");
-        }
+    public boolean removeFromSignedUp(int attendeeID){
+        return signedUpAttendees.remove(Integer.valueOf(attendeeID));
     }
 
+    public boolean registerAttendee(int attendeeID) {
+        if (attendedAttendees.contains(attendeeID)) {
+            attendedAttendees.add(attendeeID);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSignedUp(int attendeeID) {
+        return signedUpAttendees.contains(attendeeID);
+    }
+
+    public boolean hasAttended(int attendeeID){
+        return attendedAttendees.contains(attendeeID);
+    }
+
+
     public int getAvailableSeats(){
-        availableSeats = capacity - attendeeIDs.size();
+        availableSeats = capacity - signedUpAttendees.size();
         return availableSeats;
     }
 
@@ -106,12 +123,36 @@ public class Session implements Subject{
         this.capacity = capacity;
     }
 
-    public List<Integer> getAttendeeIDs() {
-        return attendeeIDs;
+    public List<Integer> getSignedUpAttendees() {
+        return signedUpAttendees;
     }
 
-    public void setAttendeeID(List<Integer> attendeeID) {
-        this.attendeeIDs = attendeeID;
+    public void setSignedUpAttendees(List<Integer> signedUpAttendees) {
+        this.signedUpAttendees = signedUpAttendees;
+    }
+
+    public List<Integer> getAttendedAttendees() {
+        return attendedAttendees;
+    }
+
+    public void setAttendedAttendees(List<Integer> attendedAttendees) {
+        this.attendedAttendees = attendedAttendees;
+    }
+
+    public void setAvailableSeats(int availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(List<Observer> observers) {
+        this.observers = observers;
+    }
+
+    public void setFeedbacks(List<Integer> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 
     public int getSpeakerID() {
