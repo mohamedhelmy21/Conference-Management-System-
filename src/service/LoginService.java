@@ -51,17 +51,6 @@ public class LoginService {
         return mapToDTO(newUser);
     }
 
-    public int generateUserId() throws IOException{
-        List<User> users = userRepository.findAll();
-        if (users.isEmpty()) {
-            return 1; // Start IDs from 1 if no users exist
-        }
-        return users.stream()
-                .mapToInt(User::getUserID)
-                .max()
-                .orElse(0) + 1;
-    }
-
     public void logout(UserDTO userDTO){
         System.out.println(userDTO);
     }
