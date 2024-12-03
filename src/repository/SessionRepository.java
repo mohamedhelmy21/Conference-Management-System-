@@ -4,6 +4,7 @@ import domain.Session;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,20 @@ public class SessionRepository extends BaseRepository<Session> {
     @Override
     protected Integer getId(Session session){
         return session.getSessionID();
+    }
+
+    @Override
+    public List<Session> findAll() throws IOException {
+        List<Session> sessions = super.findAll();
+
+        // Ensure all sessions have properly initialized observers
+        for (Session session : sessions) {
+            if (session.getObservers() == null) {
+                session.setObservers(new ArrayList<>());
+            }
+        }
+
+        return sessions;
     }
 
     public List<Session> findBySpeakerID(int speakerID) throws IOException {

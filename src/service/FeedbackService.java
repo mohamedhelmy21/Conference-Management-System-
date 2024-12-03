@@ -14,10 +14,14 @@ import java.util.stream.Collectors;
 
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
-    private final SessionService sessionService;
+    private SessionService sessionService;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, SessionService sessionService) {
+    public FeedbackService(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
+    }
+
+    // Setter to inject SessionService after initialization
+    public void setSessionService(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 
@@ -32,6 +36,8 @@ public class FeedbackService {
             Feedback feedback = new Feedback(feedbackID, attendeeID, sessionID, comments, rating, isAnonymous);
 
             feedbackRepository.save(feedback);
+
+            sessionService.addFeedback(sessionID, feedbackID);
 
             return mapToDTO(feedback);
 

@@ -4,16 +4,18 @@ import enums.Rating;
 
 public class FeedbackDTO {
     private int feedbackID;
+    private int attendeeID;
+    private int sessionID;
     private String comments;
     private Rating rating;
-    private String sessionName;
     private boolean isAnonymous;
 
-    public FeedbackDTO(int feedbackID, String comments, Rating rating, String sessionName, boolean isAnonymous) {
+    public FeedbackDTO(int feedbackID, int attendeeID, int sessionID, String comments, Rating rating, boolean isAnonymous) {
         this.feedbackID = feedbackID;
+        this.attendeeID = attendeeID;
+        this.sessionID = sessionID;
         this.comments = comments;
         this.rating = rating;
-        this.sessionName = sessionName;
         this.isAnonymous = isAnonymous;
     }
 
@@ -23,6 +25,22 @@ public class FeedbackDTO {
 
     public void setFeedbackID(int feedbackID) {
         this.feedbackID = feedbackID;
+    }
+
+    public int getAttendeeID() {
+        return attendeeID;
+    }
+
+    public void setAttendeeID(int attendeeID) {
+        this.attendeeID = attendeeID;
+    }
+
+    public int getSessionID() {
+        return sessionID;
+    }
+
+    public void setSessionID(int sessionID) {
+        this.sessionID = sessionID;
     }
 
     public String getComments() {
@@ -41,19 +59,21 @@ public class FeedbackDTO {
         this.rating = rating;
     }
 
-    public String getSessionName() {
-        return sessionName;
-    }
-
-    public void setSessionName(String sessionName) {
-        this.sessionName = sessionName;
-    }
-
     public boolean isAnonymous() {
         return isAnonymous;
     }
 
     public void setAnonymous(boolean anonymous) {
         isAnonymous = anonymous;
+    }
+
+    @Override
+    public String toString() {
+        return "FeedbackDTO{" +
+                "feedbackID=" + feedbackID +
+                ", sessionID=" + sessionID +
+                ", comments='" + comments + '\'' +
+                ", rating=" + rating +
+                '}';
     }
 }

@@ -115,6 +115,10 @@ public class Conference implements Subject{
         }
     }
 
+    public void assignManager(int managerID) {
+        managersIDs.add(managerID);
+    }
+
     @Override
     public void addObserver(Observer observer) {
     observers.add(observer);
@@ -127,8 +131,10 @@ public class Conference implements Subject{
 
     @Override
     public void notifyObservers(String message) {
-        for (Observer observer : observers) {
-            observer.notify("Conference Update - " + name + ": " + message);
+        if (observers != null) {
+            for (Observer observer : observers) {
+                observer.notify("Conference Update - " + name + ": " + message);
+            }
         }
     }
 

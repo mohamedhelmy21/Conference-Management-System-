@@ -31,6 +31,14 @@ public class Schedule {
         return sessionIDs.contains(sessionID);
     }
 
+    public int getScheduleID() {
+        return scheduleID;
+    }
+
+    public int getAttendeeID() {
+        return attendeeID;
+    }
+
     public List<Integer> getSessionsIDs() {
         return sessionIDs;
     }

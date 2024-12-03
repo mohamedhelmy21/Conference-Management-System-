@@ -24,6 +24,7 @@ public class Session implements Subject{
 
     public Session() {
         //default constructor
+        this.observers = new ArrayList<>();
     }
 
     public Session(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description, int conferenceID) {
@@ -57,12 +58,8 @@ public class Session implements Subject{
         return signedUpAttendees.remove(Integer.valueOf(attendeeID));
     }
 
-    public boolean registerAttendee(int attendeeID) {
-        if (attendedAttendees.contains(attendeeID)) {
+    public void registerAttendee(int attendeeID) {
             attendedAttendees.add(attendeeID);
-            return true;
-        }
-        return false;
     }
 
     public boolean isSignedUp(int attendeeID) {
@@ -197,8 +194,10 @@ public class Session implements Subject{
 
     @Override
     public void notifyObservers(String message) {
-        for (Observer observer : observers) {
-            observer.notify(message);
+        if (observers != null) {
+            for (Observer observer : observers) {
+                observer.notify(message);
+            }
         }
     }
 
