@@ -8,15 +8,17 @@ public class SessionDTO {
     private LocalDateTime dateTime;
     private String room;
     private int capacity;
-    private String speakerName;
+    private int speakerID;
+    private String description;
 
-    public SessionDTO(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, String speakerName) {
+    public SessionDTO(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description) {
         this.sessionID = sessionID;
         this.name = name;
         this.dateTime = dateTime;
         this.room = room;
         this.capacity = capacity;
-        this.speakerName = speakerName;
+        this.speakerID = speakerID;
+        this.description = description;
     }
 
     public int getSessionID() {
@@ -59,11 +61,19 @@ public class SessionDTO {
         this.capacity = capacity;
     }
 
-    public String getSpeakerName() {
-        return speakerName;
+    public int getSpeakerID() {
+        return speakerID;
     }
 
-    public void setSpeakerName(String speakerName) {
-        this.speakerName = speakerName;
+    public void setSpeakerID(int speakerID) {
+        this.speakerID = speakerID;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

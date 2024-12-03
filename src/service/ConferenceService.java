@@ -62,6 +62,42 @@ public class ConferenceService {
         }
     }
 
+    public void addSessionToConference(int conferenceID, int sessionID) {
+        try{
+            Conference conference = conferenceRepository.findById(conferenceID);
+            if (conference == null) {
+                throw new IllegalArgumentException("Conference not found.");
+            }
+
+            if (conference.getSessionsIDs().contains(sessionID)) {
+                throw new IllegalArgumentException("Session already exists.");
+            }
+
+            conference.addSession(sessionID);
+            conferenceRepository.save(conference);
+        } catch (IOException e) {
+            throw new RepositoryException("Error adding session to conference.", e);
+        }
+    }
+
+    public void removeSessionToConference(int conferenceID, int sessionID) {
+        try{
+            Conference conference = conferenceRepository.findById(conferenceID);
+            if (conference == null) {
+                throw new IllegalArgumentException("Conference not found.");
+            }
+
+            if (!(conference.getSessionsIDs().contains(sessionID))) {
+                throw new IllegalArgumentException("Session is not in conference.");
+            }
+
+            conference.removeSession(sessionID);
+            conferenceRepository.save(conference);
+        } catch (IOException e) {
+            throw new RepositoryException("Error removing session from conference.", e);
+        }
+    }
+
     public void deleteConference(int conferenceID) {
         try{
             conferenceRepository.delete(conferenceID);

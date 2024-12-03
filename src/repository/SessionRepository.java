@@ -28,6 +28,10 @@ public class SessionRepository extends BaseRepository<Session> {
                 .collect(Collectors.toList());
     }
 
+    public List<Session> findByConferenceID(int conferenceID) throws IOException {
+        return findAll().stream().filter(session -> session.getConferenceID() == conferenceID).collect(Collectors.toList());
+    }
+
 
 }
 

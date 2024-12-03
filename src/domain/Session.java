@@ -19,13 +19,14 @@ public class Session implements Subject{
     private String description;
     private List<Observer> observers;
     private List<Integer> feedbacks;
+    private int conferenceID;
 
 
     public Session() {
         //default constructor
     }
 
-    public Session(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description) {
+    public Session(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description, int conferenceID) {
         this.sessionID = sessionID;
         this.name = name;
         this.dateTime = dateTime;
@@ -38,6 +39,7 @@ public class Session implements Subject{
         this.observers = new ArrayList<>();
         this.feedbacks = new ArrayList<>();
         this.availableSeats = capacity;
+        this.conferenceID = conferenceID;
     }
 
     public boolean addToSignedUp(int attendeeID){
@@ -173,6 +175,14 @@ public class Session implements Subject{
 
     public List<Integer> getFeedbacks() {
         return feedbacks;
+    }
+
+    public int getConferenceID() {
+        return conferenceID;
+    }
+
+    public void setConferenceID(int conferenceID) {
+        this.conferenceID = conferenceID;
     }
 
     @Override
