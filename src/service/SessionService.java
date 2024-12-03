@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 public class SessionService {
     private final SessionRepository sessionRepository;
     private final ConferenceService conferenceService;
+    private final FeedbackService feedbackService;
 
-    public SessionService(SessionRepository sessionRepository, ConferenceService conferenceService) {
+    public SessionService(SessionRepository sessionRepository, ConferenceService conferenceService, FeedbackService feedbackService) {
         this.sessionRepository = sessionRepository;
         this.conferenceService = conferenceService;
+        this.feedbackService = feedbackService;
     }
 
     public SessionDTO createSession(String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description, int conferenceID) {
@@ -71,9 +73,93 @@ public class SessionService {
 
     public List<FeedbackDTO> viewSessionFeedback(int sessionID){
         try {
-            return feedbackService.listFeedbackForSession(sessionID);
+            return feedbackService.getSessionFeedbacks(sessionID);
         } catch (Exception e){
             throw new RepositoryException("Error retrieving session feedback.", e);
+        }
+    }
+
+    public boolean doesSessionExist(int sessionID) {
+        try {
+            return sessionRepository.findById(sessionID) != null;
+        } catch (IOException e) {
+            throw new RepositoryException("Error checking session existence.", e);
+        }
+    }
+
+    public void registerAttendance(int attendeeID, int sessionID){
+        try{
+            Session session = sessionRepository.findById(sessionID);
+
+            if (session == null){
+                throw new IllegalArgumentException("Session not found");
+            }
+            if (session.getAvailableSeats() == 0){
+                throw new IllegalArgumentException("Session is fully booked");
+            }
+
+            //Register attendee attendance
+            session.registerAttendee(attendeeID);
+            sessionRepository.save(session);
+        } catch (IOException e) {
+            throw new RepositoryException("Error registering attendance.", e);
+        }
+    }
+
+    public void checkScheduleConflicts(List<Integer> attendeeSessionIDs, int newSessionID) {
+        try {
+            // Retrieve the new session details
+            Session newSession = sessionRepository.findById(newSessionID);
+            if (newSession == null) {
+                throw new IllegalArgumentException("Session not found: " + newSessionID);
+            }
+
+            // Loop through the attendee's current sessions to check for conflicts
+            for (int existingSessionID : attendeeSessionIDs) {
+                Session existingSession = sessionRepository.findById(existingSessionID);
+
+                if (existingSession == null) {
+                    continue; // Skip invalid session IDs
+                }
+
+                // Check if the sessions overlap (date and time must conflict)
+                if (newSession.getDateTime().equals(existingSession.getDateTime())) {
+                    throw new IllegalArgumentException(
+                            "Schedule conflict: Session '" + newSession.getName() +
+                                    "' conflicts with '" + existingSession.getName() + "'."
+                    );
+                }
+            }
+        } catch (IOException e) {
+            throw new RepositoryException("Error checking for schedule conflicts.", e);
+        }
+    }
+
+    public void addAttendeeToSession(int sessionID, int attendeeID) {
+        try {
+            // Retrieve the session details
+            Session session = sessionRepository.findById(sessionID);
+            if (session == null) {
+                throw new IllegalArgumentException("Session not found: " + sessionID);
+            }
+
+            // Check if the session has available capacity
+            if (session.getAvailableSeats() <= 0) {
+                throw new IllegalArgumentException("Session is full: " + session.getName());
+            }
+
+            // Check if the attendee is already registered for the session
+            if (session.isSignedUp(attendeeID)) {
+                throw new IllegalArgumentException("Attendee is already signed up for session: " + session.getName());
+            }
+
+            // Add the attendee to the session
+            session.isSignedUp(attendeeID);
+
+            // Update the session in the repository
+            sessionRepository.save(session);
+        } catch (IOException e) {
+            throw new RepositoryException("Error adding attendee to session.", e);
         }
     }
 
