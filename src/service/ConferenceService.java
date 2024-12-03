@@ -5,20 +5,16 @@ import dto.ConferenceDTO;
 import utility.IDGenerator;
 import domain.Conference;
 import repository.ConferenceRepository;
-import repository.UserRepository;
 import exception.RepositoryException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class ConferenceService {
-    private ConferenceRepository conferenceRepository;
-    private UserRepository userRepository;
+    private final ConferenceRepository conferenceRepository;
 
     public ConferenceService(ConferenceRepository conferenceRepository) {
         this.conferenceRepository = conferenceRepository;
-        this.userRepository = userRepository;
     }
 
     public Conference createConference(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int managerID) {
@@ -74,7 +70,7 @@ public class ConferenceService {
         }
     }
 
-    public ConferenceDTO findConferenceByID(int conferenceID) {
+    public ConferenceDTO getConferenceDetails(int conferenceID) {
         try {
             Conference conference = conferenceRepository.findById(conferenceID);
             if (conference == null) {

@@ -4,13 +4,13 @@ import java.util.List;
 
 public class ScheduleDTO {
     private int scheduleID;
-    private String attendeeName;
-    private List<String> sessionsNames;
+    private int attendeeID;
+    private List<Integer> sessionsIDs;
 
-    public ScheduleDTO(int scheduleID, String attendeeName, List<String> sessionsNames) {
+    public ScheduleDTO(int scheduleID, int attendeeID, List<Integer> sessionsIDs) {
         this.scheduleID = scheduleID;
-        this.attendeeName = attendeeName;
-        this.sessionsNames = sessionsNames;
+        this.attendeeID = attendeeID;
+        this.sessionsIDs = sessionsIDs;
     }
 
     public int getScheduleID() {
@@ -21,19 +21,19 @@ public class ScheduleDTO {
         this.scheduleID = scheduleID;
     }
 
-    public String getAttendeeName() {
-        return attendeeName;
+    public int getAttendeeID() {
+        return attendeeID;
     }
 
-    public void setAttendeeName(String attendeeName) {
-        this.attendeeName = attendeeName;
+    public void setAttendeeID(int attendeeID) {
+        this.attendeeID = attendeeID;
     }
 
-    public List<String> getSessionsNames() {
-        return sessionsNames;
+    public List<Integer> getSessionsIDs() {
+        return sessionsIDs;
     }
 
-    public void setSessionsNames(List<String> sessionsNames) {
-        this.sessionsNames = sessionsNames;
+    public void setSessionsIDs(List<Integer> sessionsIDs) {
+        this.sessionsIDs = sessionsIDs;
     }
 }

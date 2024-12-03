@@ -9,10 +9,10 @@ public class ConferenceDTO {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private List<String> sessions;
-    private List<String> attendees;
+    private List<Integer> sessions;
+    private List<Integer> attendees;
 
-    public ConferenceDTO(int conferenceID, String name, String description, LocalDateTime startDate, LocalDateTime endDate, List<String> sessions, List<String> attendees) {
+    public ConferenceDTO(int conferenceID, String name, String description, LocalDateTime startDate, LocalDateTime endDate, List<Integer> sessions, List<Integer> attendees) {
         this.conferenceID = conferenceID;
         this.name = name;
         this.description = description;
@@ -62,19 +62,19 @@ public class ConferenceDTO {
         this.endDate = endDate;
     }
 
-    public List<String> getSessions() {
+    public List<Integer> getSessions() {
         return sessions;
     }
 
-    public void setSessions(List<String> sessions) {
+    public void setSessions(List<Integer> sessions) {
         this.sessions = sessions;
     }
 
-    public List<String> getAttendees() {
+    public List<Integer> getAttendees() {
         return attendees;
     }
 
-    public void setAttendees(List<String> attendees) {
+    public void setAttendees(List<Integer> attendees) {
         this.attendees = attendees;
     }
 }

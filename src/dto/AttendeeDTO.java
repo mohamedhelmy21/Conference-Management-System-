@@ -1,14 +1,15 @@
 package dto;
 
-import java.util.List;
+import domain.Schedule;
+
 
 public class AttendeeDTO {
     private int userID;
     private String name;
     private String email;
-    private List<Integer> schedule;
+    private Schedule schedule;
 
-    public AttendeeDTO(int userID, String name, String email, List<Integer> schedule) {
+    public AttendeeDTO(int userID, String name, String email, Schedule schedule) {
         this.userID = userID;
         this.name = name;
         this.email = email;
@@ -39,11 +40,11 @@ public class AttendeeDTO {
         this.email = email;
     }
 
-    public List<Integer> getSchedule() {
+    public Schedule getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(List<Integer> schedule) {
+    public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
     }
 }

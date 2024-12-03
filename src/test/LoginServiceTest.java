@@ -1,6 +1,5 @@
 package test;
 
-import domain.User;
 import dto.UserDTO;
 import enums.Role;
 import exception.IncorrectPasswordException;
@@ -39,7 +38,7 @@ public class LoginServiceTest {
             // Test 3: Successful login
             System.out.println("\n=== Test 3: Successful Login ===");
             try {
-                UserDTO loggedInUser = loginService.authenticate("john.doe@example.com", "password123");
+                UserDTO loggedInUser = loginService.logIn("john.doe@example.com", "password123");
                 System.out.println("Successfully logged in: " + loggedInUser);
             } catch (UserNotFoundException | IncorrectPasswordException e) {
                 System.err.println(e.getMessage());
@@ -48,7 +47,7 @@ public class LoginServiceTest {
             // Test 4: Login with incorrect password
             System.out.println("\n=== Test 4: Login with Incorrect Password ===");
             try {
-                loginService.authenticate("john.doe@example.com", "wrongpassword");
+                loginService.logIn("john.doe@example.com", "wrongpassword");
             } catch (UserNotFoundException | IncorrectPasswordException e) {
                 System.err.println(e.getMessage());
             }
@@ -56,7 +55,7 @@ public class LoginServiceTest {
             // Test 5: Login with non-existent email
             System.out.println("\n=== Test 5: Login with Non-Existent Email ===");
             try {
-                loginService.authenticate("nonexistent@example.com", "password123");
+                loginService.logIn("nonexistent@example.com", "password123");
             } catch (UserNotFoundException | IncorrectPasswordException e) {
                 System.err.println(e.getMessage());
             }

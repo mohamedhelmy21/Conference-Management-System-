@@ -31,7 +31,7 @@ public class Schedule {
         return sessionIDs.contains(sessionID);
     }
 
-    public List<Integer> getSessionIDs() {
+    public List<Integer> getSessionsIDs() {
         return sessionIDs;
     }
 

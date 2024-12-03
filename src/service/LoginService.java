@@ -10,7 +10,7 @@ import exception.UserAlreadyExistsException;
 import utility.IDGenerator;
 
 import java.io.IOException;
-import java.util.List;
+
 
 public class LoginService {
     private final UserRepository userRepository;
