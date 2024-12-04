@@ -58,7 +58,7 @@ public class Session implements Subject{
         return signedUpAttendees.remove(Integer.valueOf(attendeeID));
     }
 
-    public void registerAttendee(int attendeeID) {
+    public boolean registerAttendee(int attendeeID) {
             attendedAttendees.add(attendeeID);
     }
 

@@ -141,6 +141,17 @@ public class SessionService {
         }
     }
 
+    public List<Integer> getSessionsAttendedByAttendee(int attendeeID) {
+        try {
+            return sessionRepository.findAll().stream()
+                    .filter(session -> session.getAttendedAttendees().contains(attendeeID))
+                    .map(Session::getSessionID)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving attended sessions.", e);
+        }
+    }
+
     public void checkScheduleConflicts(List<Integer> attendeeSessionIDs, int newSessionID) {
         try {
             // Retrieve the new session details

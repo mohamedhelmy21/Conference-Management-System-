@@ -5,15 +5,17 @@ import java.util.List;
 
 public class CertificateDTO {
     private int certificateID;
-    private String attendeeName;
+    private int attendeeID;
     private LocalDateTime issueDate;
-    private List<String> sessionsAttended;
+    private List<Integer> sessionsAttended;
+    private String certificateText;
 
-    public CertificateDTO(int certificateID, String attendeeName, LocalDateTime issueDate, List<String> sessionsAttended) {
+    public CertificateDTO(int certificateID, int attendeeID, LocalDateTime issueDate, List<Integer> sessionsAttended, String certificateText) {
         this.certificateID = certificateID;
-        this.attendeeName = attendeeName;
+        this.attendeeID = attendeeID;
         this.issueDate = issueDate;
         this.sessionsAttended = sessionsAttended;
+        this.certificateText = certificateText;
     }
 
     public int getCertificateID() {
@@ -24,12 +26,12 @@ public class CertificateDTO {
         this.certificateID = certificateID;
     }
 
-    public String getAttendeeName() {
-        return attendeeName;
+    public int getAttendeeID() {
+        return attendeeID;
     }
 
-    public void setAttendeeName(String attendeeName) {
-        this.attendeeName = attendeeName;
+    public void setAttendeeID(int attendeeID) {
+        this.attendeeID = attendeeID;
     }
 
     public LocalDateTime getIssueDate() {
@@ -40,11 +42,19 @@ public class CertificateDTO {
         this.issueDate = issueDate;
     }
 
-    public List<String> getSessionsAttended() {
+    public List<Integer> getSessionsAttended() {
         return sessionsAttended;
     }
 
-    public void setSessionsAttended(List<String> sessionsAttended) {
+    public void setSessionsAttended(List<Integer> sessionsAttended) {
         this.sessionsAttended = sessionsAttended;
+    }
+
+    public String getCertificateText() {
+        return certificateText;
+    }
+
+    public void setCertificateText(String certificateText) {
+        this.certificateText = certificateText;
     }
 }
