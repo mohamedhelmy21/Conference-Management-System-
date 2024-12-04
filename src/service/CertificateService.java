@@ -30,18 +30,18 @@ public class CertificateService {
                 throw new IllegalArgumentException("Attendee does not exist");
             }
 
-            List<Integer> scheduledSessions = attendeeService.getAttendeeScheduleSessions(attendeeID);
+            // Get all sessions attended by the attendee via SessionService
+            List<Integer> attendedSessions = sessionService.getSessionsAttendedByAttendee(attendeeID);
 
-            List<Integer> attendedSession = sessionService.getSessionsAttendedByAttendee(attendeeID);
-
-            if (!attendedSession.equals(scheduledSessions)) {
-                throw new IllegalArgumentException("Attendee has not attended all sessions.");
+            // Ensure the attendee has attended at least one session
+            if (attendedSessions.isEmpty()) {
+                throw new IllegalArgumentException("No attended sessions found for attendee: " + attendeeID);
             }
 
             int certificateID = IDGenerator.generateId("Certificate");
-            String certificateText = generateCertificateText(attendeeID, scheduledSessions);
+            String certificateText = generateCertificateText(attendeeID, attendedSessions);
 
-            Certificate certificate = new Certificate(certificateID, attendeeID, attendedSession, certificateText);
+            Certificate certificate = new Certificate(certificateID, attendeeID, attendedSessions, certificateText);
             certificateRepository.save(certificate);
 
             return mapToDTO(certificate);
