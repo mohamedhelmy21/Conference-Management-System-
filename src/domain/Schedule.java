@@ -8,6 +8,12 @@ public class Schedule {
     private int attendeeID;
     private List<Integer> sessionIDs;
 
+
+    //default constructor
+    public Schedule(){
+        this.sessionIDs = new ArrayList<>();
+    }
+
     public Schedule(int attendeeID) {
         this.scheduleID = attendeeID;
         this.attendeeID = attendeeID;

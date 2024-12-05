@@ -1,5 +1,6 @@
 package service;
 
+import domain.Attendee;
 import dto.UserDTO;
 import enums.Role;
 import repository.UserRepository;
@@ -45,7 +46,13 @@ public class LoginService {
         }
 
         int newUserId = IDGenerator.generateId("User");
-        User newUser = new User(newUserId, name, email, password, role);
+        User newUser;
+        if (role == Role.ATTENDEE) {
+            newUser = new Attendee(newUserId, name, email, password, role);
+        } else {
+            throw new IllegalArgumentException("Unsupported role: " + role);
+        }
+
         userRepository.save(newUser);
 
         return mapToDTO(newUser);

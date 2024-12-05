@@ -209,6 +209,29 @@ public class SessionService {
         }
     }
 
+    public void removeAttendeeFromSession(int sessionID, int attendeeID) {
+        try {
+            // Retrieve the session details
+            Session session = sessionRepository.findById(sessionID);
+            if (session == null) {
+                throw new IllegalArgumentException("Session not found: " + sessionID);
+            }
+
+            // Check if the attendee is already registered for the session
+            if (!session.isSignedUp(attendeeID)) {
+                throw new IllegalArgumentException("Attendee is not signed up for session: " + session.getName());
+            }
+
+            // Add the attendee to the session
+            session.removeFromSignedUp(attendeeID);
+
+            // Update the session in the repository
+            sessionRepository.save(session);
+        } catch (IOException e) {
+            throw new RepositoryException("Error adding attendee to session.", e);
+        }
+    }
+
     private SessionDTO mapToDTO(Session session){
         return new SessionDTO(session.getSessionID(),
                 session.getName(),

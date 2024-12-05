@@ -1,16 +1,26 @@
 package domain;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import observer.Observer;
 import java.util.List;
 import java.util.ArrayList;
 import enums.Role;
 
-
+@JsonTypeName("ATTENDEE")
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class Attendee extends User implements Observer{
     private Schedule schedule;
     private List<Integer> feedbacks;
     private List<Integer> certificates;
+
+    public Attendee() {
+        super(); // Calls User's default constructor
+        this.schedule = null;
+        this.feedbacks = new ArrayList<>();
+        this.certificates = new ArrayList<>();
+    }
 
     public Attendee(int userID, String name, String email, String password, Role role) {
         super(userID, name, email, password, role.ATTENDEE);

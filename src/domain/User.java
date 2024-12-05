@@ -1,5 +1,19 @@
 package domain;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import enums.Role;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME, // Use the "type" field for polymorphism
+        include = JsonTypeInfo.As.EXISTING_PROPERTY, // Include the "type" field in JSON
+        property = "role", // Use the "role" property as the discriminator
+        visible = true // Ensure the "role" field is available during deserialization
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Attendee.class, name = "ATTENDEE"),
+        @JsonSubTypes.Type(value = Speaker.class, name = "SPEAKER"),
+        @JsonSubTypes.Type(value = ConferenceManager.class, name = "MANAGER")
+})
 
 public class User {
     private int userID;
