@@ -4,13 +4,23 @@ package repository;
 import domain.Conference;
 
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConferenceRepository extends BaseRepository<Conference> {
-    public ConferenceRepository(String filePath) {
+    private static ConferenceRepository instance;
+
+    private ConferenceRepository(String filePath) {
         super(filePath, Conference.class);
+    }
+
+    public static ConferenceRepository getInstance(String filePath) {
+        if (instance == null) {
+            instance = new ConferenceRepository(filePath);
+        }
+        return instance;
     }
 
     @Override

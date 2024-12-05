@@ -10,8 +10,17 @@ import java.util.stream.Collectors;
 
 public class SessionRepository extends BaseRepository<Session> {
 
-    public SessionRepository(String filePath) {
+    private static SessionRepository instance;
+
+    private SessionRepository(String filePath) {
         super(filePath, Session.class);
+    }
+
+    public static SessionRepository getInstance(String filePath) {
+        if (instance == null) {
+            instance = new SessionRepository(filePath);
+        }
+        return instance;
     }
 
     @Override

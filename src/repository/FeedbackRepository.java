@@ -4,14 +4,24 @@ package repository;
 import domain.Feedback;
 
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FeedbackRepository extends BaseRepository<Feedback>{
 
-    public FeedbackRepository(String filePath) {
+    private static FeedbackRepository instance;
+
+    private FeedbackRepository(String filePath) {
         super(filePath, Feedback.class);
+    }
+
+    public static FeedbackRepository getInstance(String filePath) {
+        if (instance == null) {
+            instance = new FeedbackRepository(filePath);
+        }
+        return instance;
     }
 
     @Override

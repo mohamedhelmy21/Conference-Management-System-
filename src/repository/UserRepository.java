@@ -14,8 +14,17 @@ import java.util.stream.Collectors;
 import exception.RepositoryException;
 
 public class UserRepository extends BaseRepository<User> {
-    public UserRepository(String filePath) {
+    private static UserRepository instance;
+
+    private UserRepository(String filePath) {
         super(filePath, User.class);
+    }
+
+    public static UserRepository getInstance(String filePath) {
+        if (instance == null) {
+            instance = new UserRepository(filePath);
+        }
+        return instance;
     }
 
     @Override
