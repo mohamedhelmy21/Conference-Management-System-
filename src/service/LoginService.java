@@ -45,9 +45,10 @@ public class LoginService {
             throw new UserAlreadyExistsException("User already exists");
         }
 
-        int newUserId = IDGenerator.generateId("User");
+
         User newUser;
         if (role == Role.ATTENDEE) {
+            int newUserId = IDGenerator.generateId("Attendee");
             newUser = new Attendee(newUserId, name, email, password, role);
         } else {
             throw new IllegalArgumentException("Unsupported role: " + role);

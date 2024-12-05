@@ -59,6 +59,24 @@ public class SpeakerService {
         }
     }
 
+    public void addSessionToSpeaker(int speakerID, int sessionID) {
+        try {
+            Speaker speaker = (Speaker) userRepository.findById(speakerID);
+            if (speaker == null || !speaker.getRole().equals(enums.Role.SPEAKER)) {
+                throw new IllegalArgumentException("Speaker not found or invalid role");
+            }
+
+            // Add the session ID to the speaker's session list
+            speaker.getSessionsIDs().add(sessionID);
+
+            // Save the updated speaker
+            userRepository.save(speaker);
+        } catch (IOException e) {
+            throw new RepositoryException("Error adding session to speaker.", e);
+        }
+    }
+
+
     public List<SessionDTO> getSpeakerSessions(int speakerID) {
         try {
             Speaker speaker = (Speaker) userRepository.findById(speakerID);

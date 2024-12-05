@@ -13,20 +13,20 @@ import enums.Role;
 public class Attendee extends User implements Observer{
     private Schedule schedule;
     private List<Integer> feedbacks;
-    private List<Integer> certificates;
+    private int certificate;
 
     public Attendee() {
         super(); // Calls User's default constructor
         this.schedule = null;
         this.feedbacks = new ArrayList<>();
-        this.certificates = new ArrayList<>();
+        this.certificate = -1;
     }
 
     public Attendee(int userID, String name, String email, String password, Role role) {
         super(userID, name, email, password, role.ATTENDEE);
         this.schedule = new Schedule(userID);
         this.feedbacks = new ArrayList<>();
-        this.certificates = new ArrayList<>();
+        this.certificate = -1;
     }
 
     public Schedule getSchedule() {
@@ -37,14 +37,12 @@ public class Attendee extends User implements Observer{
         return feedbacks;
     }
 
-    public List<Integer> getCertificates() {
-        return certificates;
+    public Integer getCertificate() {
+        return certificate;
     }
 
     public void addCertificate(int certificateID) {
-        if (!certificates.contains(certificateID)) {
-            certificates.add(certificates.size());
-        }
+        this.certificate = certificateID;
     }
 
     public void addFeedback(int feedbackID){

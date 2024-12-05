@@ -119,6 +119,12 @@ public class Conference implements Subject{
         managersIDs.add(managerID);
     }
 
+    public void addAttendee(int attendeeID) {
+        if (!attendeesIDs.contains(attendeeID)) {
+            attendeesIDs.add(attendeeID);
+        }
+    }
+
     @Override
     public void addObserver(Observer observer) {
     observers.add(observer);

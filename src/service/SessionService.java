@@ -17,11 +17,16 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final ConferenceService conferenceService;
     private final FeedbackService feedbackService;
+    private SpeakerService speakerService;
 
     public SessionService(SessionRepository sessionRepository, ConferenceService conferenceService, FeedbackService feedbackService) {
         this.sessionRepository = sessionRepository;
         this.conferenceService = conferenceService;
         this.feedbackService = feedbackService;
+    }
+
+    public void setSpeakerService(SpeakerService speakerService) {
+        this.speakerService = speakerService;
     }
 
     public SessionDTO createSession(String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description, int conferenceID) {
@@ -33,6 +38,8 @@ public class SessionService {
             sessionRepository.save(session);
 
             conferenceService.addSessionToConference(conferenceID, sessionID);
+
+            speakerService.addSessionToSpeaker(speakerID, sessionID);
 
             return mapToDTO(session);
         } catch (IOException e){

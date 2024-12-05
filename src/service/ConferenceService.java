@@ -98,6 +98,24 @@ public class ConferenceService {
         }
     }
 
+    public void addAttendeeToConference(int conferenceID, int attendeeID) {
+        try {
+            // Retrieve the conference
+            Conference conference = conferenceRepository.findById(conferenceID);
+            if (conference == null) {
+                throw new IllegalArgumentException("Conference not found");
+            }
+
+            // Add the attendee ID to the conference
+            conference.addAttendee(attendeeID);
+
+            // Save the updated conference
+            conferenceRepository.save(conference);
+        } catch (IOException e) {
+            throw new RepositoryException("Error adding attendee to conference.", e);
+        }
+    }
+
     public void deleteConference(int conferenceID) {
         try{
             conferenceRepository.delete(conferenceID);

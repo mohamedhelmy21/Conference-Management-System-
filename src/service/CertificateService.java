@@ -44,6 +44,9 @@ public class CertificateService {
             Certificate certificate = new Certificate(certificateID, attendeeID, attendedSessions, certificateText);
             certificateRepository.save(certificate);
 
+            attendeeService.assignCertificateToAttendee(attendeeID, certificateID);
+
+
             return mapToDTO(certificate);
         }catch (IOException e){
             throw new RepositoryException("Error generating certificate", e);
@@ -68,6 +71,7 @@ public class CertificateService {
     private String generateCertificateText(int attendeeID, List<Integer> scheduledSessions) {
         StringBuilder certificateText = new StringBuilder();
         certificateText.append("Certificate of Attendance\n");
+        certificateText.append("Attendee: ").append(attendeeService.getAttendeeName(attendeeID)).append("\n");
         certificateText.append("Attendee ID: ").append(attendeeID).append("\n");
         certificateText.append("Congratulations! You have successfully attended the following sessions:\n");
 
