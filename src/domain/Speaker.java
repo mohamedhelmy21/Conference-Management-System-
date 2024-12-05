@@ -32,7 +32,7 @@ public class Speaker extends User implements Observer{
         return true;
     }
 
-    public List<Integer> getUpcomingSessions(){
+    public List<Integer> getSessionsIDs(){
         return sessionIDs;
     }
 
