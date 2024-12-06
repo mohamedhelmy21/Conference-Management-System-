@@ -63,6 +63,15 @@ public class AttendeeService {
         }
     }
 
+    public List<SessionDTO> getAvailableSessions(int conferenceID) {
+        try {
+            // Delegate to SessionService to fetch available sessions
+            return sessionService.listSessionsByConference(conferenceID);
+        } catch (Exception e) {
+            throw new RepositoryException("Error retrieving available sessions for the conference.", e);
+        }
+    }
+
 
     public void addSessionToSchedule(int attendeeID, int sessionID){
         try {
@@ -156,6 +165,17 @@ public class AttendeeService {
             userRepository.save(attendee); // Persist changes to the repository
         } catch (IOException e) {
             throw new RepositoryException("Error assigning certificate to attendee.", e);
+        }
+    }
+
+    public Integer getAttendeeCertificateID(int attendeeID){
+        try {
+            // Retrieve the attendee by ID
+            Attendee attendee = getAttendeeById(attendeeID);
+            // Return the certificate ID associated with the attendee
+            return attendee.getCertificate();
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving certificate ID for attendee.", e);
         }
     }
 
