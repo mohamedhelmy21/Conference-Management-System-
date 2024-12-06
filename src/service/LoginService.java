@@ -48,7 +48,7 @@ public class LoginService {
 
         User newUser;
         if (role == Role.ATTENDEE) {
-            int newUserId = IDGenerator.generateId("Attendee");
+            int newUserId = IDGenerator.generateId("User");
             newUser = new Attendee(newUserId, name, email, password, role);
         } else {
             throw new IllegalArgumentException("Unsupported role: " + role);
