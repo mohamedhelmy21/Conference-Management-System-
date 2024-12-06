@@ -134,5 +134,14 @@ public class ConferenceManagerService {
         }
     }
 
+    public List<SessionDTO> listSessionsByConference(int conferenceID) {
+        return sessionService.listSessionsByConference(conferenceID);
+    }
+
+    public ConferenceDTO viewConferenceDetails(int conferenceID) {
+        return conferenceService.getConferenceDetails(conferenceID);
+    }
+
+
 }
 
