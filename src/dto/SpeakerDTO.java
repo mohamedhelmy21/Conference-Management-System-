@@ -76,4 +76,5 @@ public class SpeakerDTO {
     public void setOrganization(String organization) {
         this.organization = organization;
     }
+
 }

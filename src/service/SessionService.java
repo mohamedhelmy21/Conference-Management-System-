@@ -51,7 +51,7 @@ public class SessionService {
         try {
             sessionRepository.delete(sessionID);
 
-            conferenceService.removeSessionToConference(conferenceID, sessionID);
+            conferenceService.removeSessionFromConference(conferenceID, sessionID);
         } catch (IOException e){
             throw new RepositoryException("Error deleting session.", e);
         }
@@ -188,7 +188,7 @@ public class SessionService {
         }
     }
 
-    public void addAttendeeToSession(int sessionID, int attendeeID) {
+    public void addAttendeeToSession(int attendeeID, int sessionID) {
         try {
             // Retrieve the session details
             Session session = sessionRepository.findById(sessionID);
@@ -216,7 +216,7 @@ public class SessionService {
         }
     }
 
-    public void removeAttendeeFromSession(int sessionID, int attendeeID) {
+    public void removeAttendeeFromSession(int attendeeID, int sessionID) {
         try {
             // Retrieve the session details
             Session session = sessionRepository.findById(sessionID);

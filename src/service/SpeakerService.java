@@ -3,8 +3,10 @@ package service;
 import domain.Speaker;
 import dto.SpeakerDTO;
 import dto.SessionDTO;
+import enums.Role;
 import exception.RepositoryException;
 import repository.UserRepository;
+import utility.IDGenerator;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +20,30 @@ public class SpeakerService {
         this.userRepository = userRepository;
         this.sessionService = sessionService;
     }
+
+    public SpeakerDTO createSpeaker(String name, String email, String password, String bio, String expertise, String organization) {
+        try {
+            // Validate if the speaker already exists
+            if (userRepository.findByEmail(email) != null) {
+                throw new IllegalArgumentException("A speaker with this email already exists");
+            }
+
+            // Generate a unique speaker ID
+            int speakerID = IDGenerator.generateId("User");
+
+            // Create a new Speaker object
+            Speaker speaker = new Speaker(speakerID, name, email, password, Role.SPEAKER, bio, expertise, organization);
+
+            // Save the speaker to the repository
+            userRepository.save(speaker);
+
+            // Map the speaker to a UserDTO and return
+            return mapToDTO(speaker);
+        } catch (IOException e) {
+            throw new RepositoryException("Error creating speaker.", e);
+        }
+    }
+
 
     public SpeakerDTO getSpeakerProfile(int speakerID){
         try {

@@ -9,6 +9,7 @@ import exception.RepositoryException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ConferenceService {
     private final ConferenceRepository conferenceRepository;
@@ -80,7 +81,7 @@ public class ConferenceService {
         }
     }
 
-    public void removeSessionToConference(int conferenceID, int sessionID) {
+    public void removeSessionFromConference(int conferenceID, int sessionID) {
         try{
             Conference conference = conferenceRepository.findById(conferenceID);
             if (conference == null) {
@@ -92,6 +93,24 @@ public class ConferenceService {
             }
 
             conference.removeSession(sessionID);
+            conferenceRepository.save(conference);
+        } catch (IOException e) {
+            throw new RepositoryException("Error removing session from conference.", e);
+        }
+    }
+
+    public void removeAttendeeFromConference(int conferenceID, int attendeeID) {
+        try{
+            Conference conference = conferenceRepository.findById(conferenceID);
+            if (conference == null) {
+                throw new IllegalArgumentException("Conference not found.");
+            }
+
+            if (!(conference.getAttendeesIDs().contains(attendeeID))) {
+                throw new IllegalArgumentException("Session is not in conference.");
+            }
+
+            conference.removeAttendee(attendeeID);
             conferenceRepository.save(conference);
         } catch (IOException e) {
             throw new RepositoryException("Error removing session from conference.", e);
@@ -134,7 +153,25 @@ public class ConferenceService {
         } catch (IOException e) {
             throw new RepositoryException("Error finding conference by ID.", e);
         }
+
     }
+
+    public List<Integer> getConferenceAttendees(int conferenceID) {
+        try {
+            // Retrieve the conference
+            ConferenceDTO conference = getConferenceDetails(conferenceID);
+
+            if (conference == null) {
+                throw new IllegalArgumentException("Conference not found with ID: " + conferenceID);
+            }
+
+            // Return the list of attendee IDs
+            return conference.getAttendees();
+        } catch (Exception e) {
+            throw new RepositoryException("Error retrieving conference attendees.", e);
+        }
+    }
+
 
     private void validateConferenceDetails(String name, LocalDateTime startDate, LocalDateTime endDate) {
         if (name == null || name.isBlank()) {
@@ -145,7 +182,7 @@ public class ConferenceService {
         }
     }
 
-    private ConferenceDTO mapToDTO(Conference conference) {
+    public ConferenceDTO mapToDTO(Conference conference) {
         return new ConferenceDTO(conference.getConferenceID(),
           conference.getName(),
           conference.getDescription(),
