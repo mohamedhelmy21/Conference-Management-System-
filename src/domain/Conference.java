@@ -125,6 +125,12 @@ public class Conference implements Subject{
         }
     }
 
+    public void removeAttendee(int attendeeID){
+        if (attendeesIDs.contains(attendeeID)) {
+            attendeesIDs.remove(Integer.valueOf(attendeeID));
+        }
+    }
+
     @Override
     public void addObserver(Observer observer) {
     observers.add(observer);
