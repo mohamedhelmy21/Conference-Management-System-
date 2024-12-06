@@ -12,7 +12,7 @@ public class ReportRepoTest {
         try {
             // Initialize repository
             String filePath = "data/reports.json"; // Adjust path as necessary
-            ReportRepository reportRepository = new ReportRepository(filePath);
+            ReportRepository reportRepository = ReportRepository.getInstance(filePath);
 
             // Test 1: Add reports
             System.out.println("=== Test 1: Add Reports ===");

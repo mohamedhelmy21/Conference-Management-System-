@@ -15,7 +15,7 @@ public class LoginServiceTest {
         try {
             // Initialize repository and service
             String filePath = "data/users.json"; // Adjust the file path if necessary
-            UserRepository userRepository = new UserRepository(filePath);
+            UserRepository userRepository = UserRepository.getInstance(filePath);
             LoginService loginService = new LoginService(userRepository);
 
             // Test 1: Register a new user
@@ -23,6 +23,8 @@ public class LoginServiceTest {
             try {
                 UserDTO newUser = loginService.register("John Doe", "john.doe@example.com", "password123", Role.ATTENDEE);
                 System.out.println("Successfully registered: " + newUser);
+                UserDTO newUser2 = loginService.register("Peter parker", "spiderman@example.com", "password123", Role.ATTENDEE);
+                System.out.println("Successfully registered: " + newUser2);
             } catch (UserAlreadyExistsException e) {
                 System.err.println(e.getMessage());
             }

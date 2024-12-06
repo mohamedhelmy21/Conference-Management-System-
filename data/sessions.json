@@ -1,12 +1,15 @@
 [ {
-  "sessionID" : 201,
-  "name" : "Introduction to LLMs",
-  "dateTime" : "2025-05-10T10:00:00",
-  "room" : "Room C",
+  "sessionID" : 1,
+  "name" : "Introduction to AI",
+  "dateTime" : "2025-01-02T10:00:00",
+  "room" : "Room A",
   "capacity" : 100,
-  "availableSeats" : 100,
-  "attendeeIDs" : [ ],
+  "availableSeats" : 99,
+  "signedUpAttendees" : [ 3 ],
+  "attendedAttendees" : [ ],
   "speakerID" : 1,
-  "description" : "Learn the basics of Large Language Models",
-  "feedbacks" : [ ]
+  "description" : "A comprehensive introduction to Artificial Intelligence.",
+  "observers" : [ ],
+  "feedbacks" : [ ],
+  "conferenceID" : 1
 } ]

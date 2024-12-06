@@ -11,7 +11,7 @@ public class FeedbackRepoTest {
         try {
             // Initialize repository
             String filePath = "data/feedback.json"; // Adjust path as necessary
-            FeedbackRepository feedbackRepository = new FeedbackRepository(filePath);
+            FeedbackRepository feedbackRepository = FeedbackRepository.getInstance(filePath);
 
             // Test 1: Add feedbacks
             System.out.println("=== Test 1: Add Feedbacks ===");

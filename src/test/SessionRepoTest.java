@@ -12,18 +12,16 @@ public class SessionRepoTest {
         try {
             // Initialize repository
             String filePath = "data/sessions.json"; // Adjust path as necessary
-            SessionRepository sessionRepository = new SessionRepository(filePath);
+            SessionRepository sessionRepository = SessionRepository.getInstance(filePath);
 
             // Test 1: Add sessions
             System.out.println("=== Test 1: Add Sessions ===");
             Session session1 = new Session(
                     201, "Introduction to LLMs", LocalDateTime.of(2025, 5, 10, 10, 0),
-                    "Room A", 100, 1, "Learn the basics of Large Language Models"
-            );
+                    "Room A", 100, 1, "Learn the basics of Large Language Models", 1);
             Session session2 = new Session(
                     202, "Advances in AI Ethics", LocalDateTime.of(2025, 5, 11, 14, 0),
-                    "Room B", 50, 2, "Discussion on ethical challenges in AI"
-            );
+                    "Room B", 50, 2, "Discussion on ethical challenges in AI", 1);
 
             sessionRepository.save(session1);
             sessionRepository.save(session2);

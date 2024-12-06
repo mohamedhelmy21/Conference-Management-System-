@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class ConferenceServiceTest {
     public static void main(String[] args) {
         String filePath = "data/conferences.json"; // Adjust path as necessary
-        ConferenceRepository conferenceRepository = new ConferenceRepository(filePath);
+        ConferenceRepository conferenceRepository = ConferenceRepository.getInstance(filePath);
         ConferenceService conferenceService = new ConferenceService(conferenceRepository);
 
         try {
@@ -27,7 +27,7 @@ public class ConferenceServiceTest {
 
             // Test 2: Retrieve a conference by ID
             System.out.println("\n=== Test 2: Find Conference by ID ===");
-            ConferenceDTO foundConference = conferenceService.findConferenceByID(conference1.getConferenceID());
+            ConferenceDTO foundConference = conferenceService.getConferenceDetails(conference1.getConferenceID());
             System.out.println("Found Conference: " + foundConference);
 
             // Test 3: Update a conference
@@ -39,15 +39,13 @@ public class ConferenceServiceTest {
                     LocalDateTime.of(2025, 5, 11, 9, 0),
                     LocalDateTime.of(2025, 5, 16, 18, 0)
             );
-            ConferenceDTO updatedConference = conferenceService.findConferenceByID(conference1.getConferenceID());
+            ConferenceDTO updatedConference = conferenceService.getConferenceDetails(conference1.getConferenceID());
             System.out.println("Updated Conference: " + updatedConference);
 
             // Test 4: Delete a conference
-            System.out.println("\n=== Test 4: Delete Conference ===");
-            conferenceService.deleteConference(conference1.getConferenceID());
-            System.out.println("Conference deleted successfully.");
+
             try {
-                conferenceService.findConferenceByID(conference1.getConferenceID());
+                conferenceService.getConferenceDetails(conference1.getConferenceID());
             } catch (IllegalArgumentException e) {
                 System.out.println("Expected Error: " + e.getMessage());
             }

@@ -12,7 +12,7 @@ public class UserRepoTest {
         try {
             // Initialize repository
             String filePath = "data/users.json"; // Adjust path as necessary
-            UserRepository userRepository = new UserRepository(filePath);
+            UserRepository userRepository = UserRepository.getInstance(filePath);
 
             // Test 1: Add users
             System.out.println("=== Test 1: Add Users ===");

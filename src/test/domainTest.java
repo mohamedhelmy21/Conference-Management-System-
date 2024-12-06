@@ -53,22 +53,22 @@ public class domainTest {
 
         // Create Sessions
         Session session1 = new Session(201, "Introduction to AI",
-                LocalDateTime.of(2025, 5, 11, 10, 0), "Room A", 50, 2, "Fundementals of AI");
+                LocalDateTime.of(2025, 5, 11, 10, 0), "Room A", 50, 2, "Fundementals of AI", 1);
         Session session2 = new Session(202, "Advanced Machine Learning",
-                LocalDateTime.of(2025, 5, 12, 14, 0), "Room B", 30, 2, "Machine Learning Algorithms");
+                LocalDateTime.of(2025, 5, 12, 14, 0), "Room B", 30, 2, "Machine Learning Algorithms", 1);
 
         // Add Sessions to Conference
         conference.addSession(session1.getSessionID());
         conference.addSession(session2.getSessionID());
 
         // Register Attendees
-        session1.registerAttendee(1); // Attendee ID: 1
-        session1.registerAttendee(2); // Attendee ID: 2
-        session2.registerAttendee(1);
+        session1.addToSignedUp(1); // Attendee ID: 1
+        session1.addToSignedUp(2); // Attendee ID: 2
+        session2.addToSignedUp(1);
 
         // Display Session Details
-        System.out.println("Session 1: " + session1.getName() + ", Attendees: " + session1.getAttendeeIDs());
-        System.out.println("Session 2: " + session2.getName() + ", Attendees: " + session2.getAttendeeIDs());
+        System.out.println("Session 1: " + session1.getName() + ", Attendees: " + session1.getSignedUpAttendees());
+        System.out.println("Session 2: " + session2.getName() + ", Attendees: " + session2.getSignedUpAttendees());
 
         // Test Notifications
         session1.notifyObservers("Session 'Introduction to AI' is starting now.");
@@ -94,12 +94,12 @@ public class domainTest {
 
         // Create Sessions
         Session session1 = new Session(201, "Introduction to AI",
-                LocalDateTime.of(2025, 5, 11, 10, 0), "Room A", 50, 2, "Fundementals of AI");
+                LocalDateTime.of(2025, 5, 11, 10, 0), "Room A", 50, 2, "Fundementals of AI", 1);
         Session session2 = new Session(202, "Advanced Machine Learning",
-                LocalDateTime.of(2025, 5, 12, 14, 0), "Room B", 30, 2, "Machine Learning Algorithms");
+                LocalDateTime.of(2025, 5, 12, 14, 0), "Room B", 30, 2, "Machine Learning Algorithms", 1);
 
         // Generate Certificate
-        Certificate certificate = new Certificate(401, 1, Arrays.asList(session1, session2));
+        Certificate certificate = new Certificate(401, 1, Arrays.asList(session1.getSessionID(), session2.getSessionID()), "");
         System.out.println("Certificate: " + certificate);
 
         // Download Certificate

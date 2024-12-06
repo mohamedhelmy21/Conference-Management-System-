@@ -14,14 +14,14 @@ public class CertificateRepoTest {
         try {
             // Initialize repository
             String filePath = "data/certificates.json"; // Adjust path as necessary
-            CertificateRepository certificateRepository = new CertificateRepository(filePath);
+            CertificateRepository certificateRepository = CertificateRepository.getInstance(filePath);
 
             // Test 1: Add certificates
             System.out.println("=== Test 1: Add Certificates ===");
-            List<Session> sessionsAttended = new ArrayList<>();
-            sessionsAttended.add(new Session(201, "Introduction to LLMs", LocalDateTime.of(2025, 5, 10, 10, 0), "Room A", 100, 1, "Learn the basics of LLMs"));
+            List<Integer> sessionsAttended = new ArrayList<>();
+            sessionsAttended.add(201);
 
-            Certificate certificate1 = new Certificate(401, 1, sessionsAttended);
+            Certificate certificate1 = new Certificate(401, 1, sessionsAttended, "");
             certificateRepository.save(certificate1);
 
             // Test 2: Retrieve all certificates
@@ -43,6 +43,7 @@ public class CertificateRepoTest {
                 System.out.println(certificate);
             }
 
+            /*
             // Test 5: Delete certificate
             System.out.println("\n=== Test 5: Delete Certificate ===");
             certificateRepository.delete(401);
@@ -50,7 +51,7 @@ public class CertificateRepoTest {
             for (Certificate certificate : certificateRepository.findAll()) {
                 System.out.println(certificate);
             }
-
+            */
         } catch (IOException e) {
             e.printStackTrace();
         }

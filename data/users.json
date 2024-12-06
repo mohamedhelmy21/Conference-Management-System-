@@ -1,13 +1,30 @@
 [ {
-  "userID" : 2,
-  "name" : "Bob",
-  "email" : "bob@example.com",
-  "password" : "securepassword",
-  "role" : "SPEAKER"
-}, {
   "userID" : 1,
-  "name" : "Alice",
-  "email" : "alice.newemail@example.com",
+  "name" : "Dr. Smith",
+  "email" : "dr.smith@example.com",
   "password" : "password123",
-  "role" : "ATTENDEE"
+  "role" : "SPEAKER",
+  "bio" : "Expert in AI",
+  "expertise" : "Machine Learning",
+  "organization" : "Tech University",
+  "sessionsIDs" : [ 1 ]
+}, {
+  "userID" : 3,
+  "name" : "John Doe",
+  "email" : "john.doe@example.com",
+  "password" : "password123",
+  "role" : "ATTENDEE",
+  "schedule" : {
+    "scheduleID" : 3,
+    "attendeeID" : 3,
+    "sessionsIDs" : [ 1 ]
+  },
+  "feedbacks" : [ ],
+  "certificate" : -1
+}, {
+  "userID" : 2,
+  "name" : "Nancy Manager",
+  "email" : "nancy.manager@example.com",
+  "password" : "password",
+  "role" : "MANAGER"
 } ]

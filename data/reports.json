@@ -1,7 +1,13 @@
 [ {
-  "reportID" : 501,
-  "content" : "Summary of GAF-AI 2025",
-  "generatedDate" : "2024-11-30T03:07:48.3481286",
-  "author" : "Conference Manager",
+  "reportID" : 1,
+  "content" : "Session Feedback Report for Introduction to AI:\nComment: Great session! | Rating: FIVE",
+  "generatedDate" : "2024-12-06T18:05:49.3284213",
+  "author" : "Manager",
   "averageRating" : 5
+}, {
+  "reportID" : 2,
+  "content" : "Attendance Report for AI Summit 2025:\nJohn Doe",
+  "generatedDate" : "2024-12-06T18:05:49.4386051",
+  "author" : "Manager",
+  "averageRating" : 0
 } ]
