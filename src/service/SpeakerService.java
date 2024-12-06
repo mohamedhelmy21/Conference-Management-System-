@@ -1,6 +1,7 @@
 package service;
 
 import domain.Speaker;
+import dto.FeedbackDTO;
 import dto.SpeakerDTO;
 import dto.SessionDTO;
 import enums.Role;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 public class SpeakerService {
     private final UserRepository userRepository;
     private final SessionService sessionService;
+    private final FeedbackService feedbackService;
 
-    public SpeakerService(UserRepository userRepository, SessionService sessionService) {
+    public SpeakerService(UserRepository userRepository, SessionService sessionService, FeedbackService feedbackService) {
         this.userRepository = userRepository;
         this.sessionService = sessionService;
+        this.feedbackService = feedbackService;
     }
 
     public SpeakerDTO createSpeaker(String name, String email, String password, String bio, String expertise, String organization) {
@@ -92,6 +95,11 @@ public class SpeakerService {
                 throw new IllegalArgumentException("Speaker not found or invalid role");
             }
 
+            // Check if the session is already assigned
+            if (speaker.getSessionsIDs().contains(sessionID)) {
+                throw new IllegalArgumentException("Session already assigned to this speaker.");
+            }
+
             // Add the session ID to the speaker's session list
             speaker.getSessionsIDs().add(sessionID);
 
@@ -117,6 +125,25 @@ public class SpeakerService {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RepositoryException("Error retrieving speaker sessions.", e);
+        }
+    }
+
+    public List<FeedbackDTO> getSessionFeedback(int sessionID) {
+        try {
+            // Use FeedbackService to fetch feedback for the session
+            return feedbackService.getSessionFeedbacks(sessionID); // Assumes this method exists in FeedbackService
+        } catch (Exception e) {
+            throw new RepositoryException("Error retrieving feedback for session.", e);
+        }
+    }
+
+    // Retrieve average rating for a session
+    public double getSessionAverageRating(int sessionID) {
+        try {
+            // Use FeedbackService to fetch average rating for the session
+            return feedbackService.getAverageRating(sessionID); // Assumes this method exists in FeedbackService
+        } catch (Exception e) {
+            throw new RepositoryException("Error retrieving average rating for session.", e);
         }
     }
 

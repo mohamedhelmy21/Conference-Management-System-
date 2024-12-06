@@ -7,6 +7,7 @@ import enums.Role;
 import repository.UserRepository;
 import repository.SessionRepository;
 import repository.ConferenceRepository;
+import service.FeedbackService;
 import service.SpeakerService;
 import service.SessionService;
 import service.ConferenceService;
@@ -26,7 +27,7 @@ public class SpeakerServiceTest {
             // Initialize services
             ConferenceService conferenceService = new ConferenceService(conferenceRepository);
             SessionService sessionService = new SessionService(sessionRepository, conferenceService, null); // Passing null for unused services
-            SpeakerService speakerService = new SpeakerService(userRepository, sessionService);
+            SpeakerService speakerService = new SpeakerService(userRepository, sessionService, null);
 
             sessionService.setSpeakerService(speakerService);
 

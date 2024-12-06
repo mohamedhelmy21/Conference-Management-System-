@@ -23,7 +23,7 @@ public class ReportServiceTest {
 
             CertificateService certificateService = new CertificateService(certificateRepository, sessionService); // Placeholder for other dependencies
 
-            SpeakerService speakerService = new SpeakerService(userRepository, sessionService);
+            SpeakerService speakerService = new SpeakerService(userRepository, sessionService, feedbackService);
             sessionService.setSpeakerService(speakerService);
 
             AttendeeService attendeeService = new AttendeeService(
