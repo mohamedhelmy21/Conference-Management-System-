@@ -31,22 +31,22 @@ public class AppInitializer {
         conferenceRepository = ConferenceRepository.getInstance("data/conferences.json");
         reportRepository = ReportRepository.getInstance("data/reports.json");
 
-
-        ConferenceService conferenceService = new ConferenceService(conferenceRepository);
-        FeedbackService feedbackService = new FeedbackService(feedbackRepository);
-        SessionService sessionService = new SessionService(sessionRepository, conferenceService, feedbackService);
+        loginService = new LoginService(userRepository);
+        conferenceService = new ConferenceService(conferenceRepository);
+        feedbackService = new FeedbackService(feedbackRepository);
+        sessionService = new SessionService(sessionRepository, conferenceService, feedbackService);
         feedbackService.setSessionService(sessionService);
 
-        CertificateService certificateService = new CertificateService(certificateRepository, sessionService); // Placeholder for other dependencies
+        certificateService = new CertificateService(certificateRepository, sessionService); // Placeholder for other dependencies
 
-        SpeakerService speakerService = new SpeakerService(userRepository, sessionService, feedbackService);
+        speakerService = new SpeakerService(userRepository, sessionService, feedbackService);
         sessionService.setSpeakerService(speakerService);
 
-        AttendeeService attendeeService = new AttendeeService(userRepository, sessionService, certificateService, feedbackService, conferenceService, speakerService);
+        attendeeService = new AttendeeService(userRepository, sessionService, certificateService, feedbackService, conferenceService, speakerService);
 
-        ConferenceManagerService conferenceManagerService = new ConferenceManagerService(userRepository, conferenceService, sessionService, speakerService);
+        conferenceManagerService = new ConferenceManagerService(userRepository, conferenceService, sessionService, speakerService);
 
-        ReportService reportService = new ReportService(reportRepository, feedbackService, conferenceService, sessionService, attendeeService);
+        reportService = new ReportService(reportRepository, feedbackService, conferenceService, sessionService, attendeeService);
     }
 
     // Getters for services

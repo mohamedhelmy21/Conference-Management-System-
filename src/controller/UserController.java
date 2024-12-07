@@ -19,25 +19,13 @@ public class UserController {
     // Login method
     public UserDTO login(String email, String password) {
         try {
-            UserDTO user = loginService.logIn(email, password);
-
-            if (user == null) {
-                System.err.println("Login failed: User not found.");
-                return null;
-            }
-
-            // Log success
-            System.out.println("Login successful for user: " + user.getName() + ", Role: " + user.getRole());
-            return user;
-
-        } catch (UserNotFoundException e) {
-            System.err.println("Login failed: User not found.");
-            return null;
-        } catch (IncorrectPasswordException e) {
-            System.err.println("Login failed: Incorrect password.");
-            return null;
+            return loginService.logIn(email, password);
+        } catch (UserNotFoundException | IncorrectPasswordException e) {
+            // Log the error and rethrow for the UI to handle
+            System.err.println(e.getMessage());
+            throw e; // Re-throwing to be caught in the UI layer
         } catch (IOException e) {
-            System.err.println("Login failed: Unable to access data.");
+            System.err.println("Error accessing the user repository: " + e.getMessage());
             return null;
         }
     }
