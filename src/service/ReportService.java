@@ -78,7 +78,7 @@ public class ReportService {
             String content = "Attendance Report for " + conference.getName() + ":\n" +
                     String.join("\n", attendeeNames);
 
-            Report report = new Report(reportID, content, author, 0);
+            Report report = new Report(reportID, content, author);
 
             // Save report
             reportRepository.save(report);

@@ -13,6 +13,13 @@ public class Report {
         //default constructor
     }
 
+    public Report(int reportID, String content, String author) {
+        this.reportID = reportID;
+        this.content = content;
+        this.generatedDate = generatedDate;
+        this.author = author;
+    }
+
     public Report(int reportID, String content, String author, int averageRating) {
         this.reportID = reportID;
         this.content = content;
