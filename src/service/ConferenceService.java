@@ -10,6 +10,7 @@ import exception.RepositoryException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConferenceService {
     private final ConferenceRepository conferenceRepository;
@@ -60,6 +61,17 @@ public class ConferenceService {
             conferenceRepository.save(conference);
         } catch (IOException e) {
             throw new RepositoryException("Error updating conference.", e);
+        }
+    }
+
+    public List<ConferenceDTO> getAllConferences() {
+        try {
+            List<Conference> conferences = conferenceRepository.findAll();
+            return conferences.stream()
+                    .map(this::mapToDTO) // Convert each Conference to ConferenceDTO
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving all conferences.", e);
         }
     }
 
