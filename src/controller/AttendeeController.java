@@ -58,10 +58,13 @@ public class AttendeeController {
 
     public boolean registerForConference(int attendeeID, int conferenceID) {
         try {
-            List<Integer> registeredConferences = attendeeService.getRegisteredConferences(attendeeID);
-            if (registeredConferences.contains(conferenceID)) {
-                throw new IllegalArgumentException("You are already registered for this conference.");
+            // Check if attendee is already registered for a conference
+            int currentConferenceID = attendeeService.getAttendeeConferenceID(attendeeID);
+            if (currentConferenceID != -1) {
+                throw new IllegalArgumentException("Attendee is already registered for a conference with ID: " + currentConferenceID);
             }
+
+            // Register the attendee for the conference
             attendeeService.registerAttendeeToConference(attendeeID, conferenceID);
             return true;
         } catch (Exception e) {
@@ -69,6 +72,11 @@ public class AttendeeController {
             return false;
         }
     }
+
+    public int getAttendeeConferenceID(int attendeeID) {
+        return attendeeService.getAttendeeConferenceID(attendeeID);
+    }
+
 
     public int getSessionIDByName(String sessionName) {
         return attendeeService.getSessionIDByName(sessionName);
@@ -81,10 +89,26 @@ public class AttendeeController {
     // Submit feedback for a session
     public boolean submitFeedback(int attendeeID, int sessionID, String comments, Rating rating, boolean isAnonymous) {
         try {
+            if (hasSubmittedFeedback(attendeeID, sessionID)) {
+                throw new IllegalArgumentException("You have already submitted feedback for this session.");
+            }
+
             attendeeService.submitFeedback(attendeeID, sessionID, comments, rating, isAnonymous);
             return true;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             System.err.println("Error submitting feedback: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean hasSubmittedFeedback(int attendeeID, int sessionID) {
+        try {
+            // Check if the attendee has already submitted feedback for the session
+            return attendeeService.hasSubmittedFeedback(attendeeID, sessionID);
+        } catch (Exception e) {
+            System.err.println("Error checking existing feedback: " + e.getMessage());
             return false;
         }
     }

@@ -152,12 +152,34 @@ public class AttendeeService {
                 throw new IllegalArgumentException("Attendee not found");
             }
 
-            // Delegate to ConferenceService
+            // Check if attendee is already signed up for another conference
+            if (attendee.getConferenceID() != -1) {
+                throw new IllegalArgumentException("Attendee is already registered for a conference with ID: " + attendee.getConferenceID());
+            }
+
+            // Assign the conferenceID
+            attendee.setConferenceID(conferenceID);
+
+            // Persist the change
+            userRepository.save(attendee);
+
+            // Add attendee to the conference
             conferenceService.addAttendeeToConference(conferenceID, attendeeID);
         } catch (IOException e) {
             throw new RepositoryException("Error registering attendee to conference.", e);
         }
     }
+
+    public int getAttendeeConferenceID(int attendeeID) {
+        try {
+            Attendee attendee = getAttendeeById(attendeeID);
+            return attendee.getConferenceID();
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving conference ID for attendee.", e);
+        }
+    }
+
+
 
     public void assignCertificateToAttendee(int attendeeID, int certificateID) {
         try {
@@ -253,6 +275,15 @@ public class AttendeeService {
         }
     }
 
+    public boolean hasSubmittedFeedback(int attendeeID, int sessionID) {
+        try {
+            Attendee attendee = getAttendeeById(attendeeID);
+            return attendee.getFeedbacks().stream()
+                    .anyMatch(feedbackID -> feedbackService.isFeedbackForSession(feedbackID, sessionID));
+        } catch (IOException e) {
+            throw new RepositoryException("Error checking feedback existence.", e);
+        }
+    }
 
 
 

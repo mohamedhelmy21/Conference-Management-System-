@@ -46,6 +46,23 @@ public class FeedbackService {
         }
     }
 
+    public FeedbackDTO getFeedback(int feedbackID) {
+        try {
+            Feedback feedback = feedbackRepository.findById(feedbackID);
+            if (feedback == null) {
+                throw new IllegalArgumentException("Feedback not found for ID: " + feedbackID);
+            }
+            return mapToDTO(feedback);
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving feedback.", e);
+        }
+    }
+
+    public boolean isFeedbackForSession(int feedbackID, int sessionID) {
+        FeedbackDTO feedback = getFeedback(feedbackID);
+        return feedback != null && feedback.getSessionID() == sessionID;
+    }
+
     public List<FeedbackDTO> getSessionFeedbacks(int sessionID) {
         try{
             if (!sessionService.doesSessionExist(sessionID)){

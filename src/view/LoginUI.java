@@ -25,7 +25,7 @@ public class LoginUI extends JFrame {
     private JButton registerButton;
 
     private UserController userController;
-    private AttendeeController attendeeController;
+    AttendeeController attendeeController;
 
 
     public LoginUI(UserController userController) {
@@ -82,7 +82,7 @@ public class LoginUI extends JFrame {
                 // Redirect based on role
                 switch (user.getRole()) {
                     case ATTENDEE:
-                        AttendeePortalUI attendeeUI = new AttendeePortalUI(attendeeController, user.getUserID());
+                        AttendeePortalUI attendeeUI = new AttendeePortalUI(attendeeController, userController, user.getUserID(), user.getName(), user.getEmail());
                         attendeeUI.setVisible(true);
                         break;
                     case SPEAKER:

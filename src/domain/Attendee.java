@@ -14,6 +14,7 @@ public class Attendee extends User implements Observer{
     private Schedule schedule;
     private List<Integer> feedbacks;
     private int certificate;
+    private int conferenceID = -1;
 
     public Attendee() {
         super(); // Calls User's default constructor
@@ -47,6 +48,14 @@ public class Attendee extends User implements Observer{
 
     public void addFeedback(int feedbackID){
         feedbacks.add(feedbackID);
+    }
+
+    public int getConferenceID() {
+        return conferenceID;
+    }
+
+    public void setConferenceID(int conferenceID) {
+        this.conferenceID = conferenceID;
     }
 
     @Override

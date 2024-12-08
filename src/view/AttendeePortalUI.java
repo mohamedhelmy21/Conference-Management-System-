@@ -1,6 +1,7 @@
 package view;
 
 import controller.AttendeeController;
+import controller.UserController;
 import dto.*;
 import enums.Rating;
 
@@ -27,15 +28,27 @@ public class AttendeePortalUI extends JFrame {
     private JLabel feedbackHeader;
     private JTable conferenceTable;
     private JButton signUpButton;
+    private JButton logoutButton;
+    private JLabel attendeeInfoLabel;
+    private JLabel attendeeIDLabel;
+    private JLabel attendeeNameLabel;
+    private JLabel attendeeEmailLabel;
 
     private final AttendeeController attendeeController;
+    private final UserController userController;
     private final int attendeeID;
+    private final String attendeeName;
+    private final String attendeeEmail;
     private int conferenceID;
 
-    public AttendeePortalUI(AttendeeController attendeeController, int attendeeID) {
+    public AttendeePortalUI(AttendeeController attendeeController, UserController userController, int attendeeID, String attendeeName, String attendeeEmail) {
         this.attendeeController = attendeeController;
+        this.userController = userController;
         this.attendeeID = attendeeID;
-        this.conferenceID = -1;
+        this.attendeeName = attendeeName;
+        this.attendeeEmail = attendeeEmail;
+        this.conferenceID = attendeeController.getAttendeeConferenceID(attendeeID);
+
 
 
         setTitle("Attendee Portal");
@@ -50,6 +63,10 @@ public class AttendeePortalUI extends JFrame {
 
     private void initializeTabs() {
 
+        attendeeInfoLabel.setText("Logged in as: " + attendeeName + " (ID: " + attendeeID + ")");
+
+        initializeProfileDetailsTab();
+
         // Initialize Conference Selection Table
         DefaultTableModel conferenceTableModel = new DefaultTableModel(
                 new Object[]{"ID", "Name", "Description", "Start Date", "End Date"}, 0
@@ -60,6 +77,7 @@ public class AttendeePortalUI extends JFrame {
 // Sign Up Button Action
         signUpButton.addActionListener(e -> signUpForConference());
 
+        logoutButton.addActionListener(e -> logout());
 
         // Initialize Conference Schedule Table
         DefaultTableModel conferenceScheduleTableModel = new DefaultTableModel(
@@ -81,16 +99,20 @@ public class AttendeePortalUI extends JFrame {
         // Initialize Certificate Tab
         certificateDetails.setEditable(false);
 
-        List<Integer> registeredConferences = attendeeController.getRegisteredConferences(attendeeID);
-        if (registeredConferences.isEmpty()) {
-            disableTabs();
-        } else {
+        if (conferenceID != -1) {
+            // Load data if already signed up
             enableTabs();
             refreshUI();
+        } else {
+            // Disable tabs if not signed up
+            disableTabs();
         }
     }
 
     private void initializeListeners() {
+
+        sessionDropdown.addActionListener(e -> enableFeedbackButton());
+
         // Register for a Session
         registerButton.addActionListener(e -> registerForSession());
 
@@ -167,6 +189,15 @@ public class AttendeePortalUI extends JFrame {
         }
     }
 
+    private void initializeProfileDetailsTab() {
+
+        // Add Labels for Profile Details
+        attendeeIDLabel.setText("ID: " + attendeeID);
+        attendeeNameLabel.setText("Name: " + attendeeName);
+        attendeeEmailLabel.setText("Email: " + attendeeEmail);
+
+    }
+
 
     private void initializeFeedbackTab() {
         // Load sessions into the dropdown
@@ -183,8 +214,35 @@ public class AttendeePortalUI extends JFrame {
         }
     }
 
+    private void logout(){
+        try {
+            // Create a temporary UserDTO with attendee details
+            UserDTO userDTO = new UserDTO(attendeeID, attendeeName, "", enums.Role.ATTENDEE);
+
+            // Perform logout
+            userController.logout(userDTO);
+
+            // Close the Attendee UI
+            dispose();
+
+            // Redirect to Login UI
+            LoginUI loginUI = new LoginUI(userController);
+            loginUI.attendeeController = attendeeController;
+            loginUI.setVisible(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(AttendeePortalUI.this, "Error logging out: " + ex.getMessage(),
+                    "Logout Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void signUpForConference() {
         int selectedRow = conferenceTable.getSelectedRow();
+
+        if (conferenceID != -1) {
+            JOptionPane.showMessageDialog(this, "You are already registered for a conference with ID: " + conferenceID, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a conference to sign up.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -251,6 +309,12 @@ public class AttendeePortalUI extends JFrame {
     }
 
     private void submitFeedback() {
+      try {  // Validate session selection
+        if (sessionDropdown.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Please select a session before submitting feedback.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         String sessionName = (String) sessionDropdown.getSelectedItem();
         int sessionID = attendeeController.getSessionIDByName(sessionName);
         String comments = commentField.getText();
@@ -258,9 +322,14 @@ public class AttendeePortalUI extends JFrame {
         boolean isAnonymous = false; // Extend if needed
 
         if (attendeeController.submitFeedback(attendeeID, sessionID, comments, rating, isAnonymous)) {
-            JOptionPane.showMessageDialog(this, "Feedback submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to submit feedback.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Feedback submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);}
+
+        } catch (IllegalArgumentException e) {
+        // Handle specific errors like duplicate feedback
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+        // Handle generic errors
+        JOptionPane.showMessageDialog(this, "Failed to submit feedback: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -280,7 +349,7 @@ public class AttendeePortalUI extends JFrame {
     }
 
     private void disableTabs() {
-        for (int i = 1; i < tabbedPane.getTabCount(); i++) {
+        for (int i = 2; i < tabbedPane.getTabCount(); i++) {
             tabbedPane.setEnabledAt(i, false);
         }
     }
@@ -288,6 +357,14 @@ public class AttendeePortalUI extends JFrame {
     private void refreshUI() {
         loadConferenceSchedule();
         loadPersonalizedSchedule();
+    }
+
+    private void enableFeedbackButton() {
+        if (sessionDropdown.getSelectedItem() != null) {
+            submitFeedbackButton.setEnabled(true);
+        } else {
+            submitFeedbackButton.setEnabled(false);
+        }
     }
 
 }
