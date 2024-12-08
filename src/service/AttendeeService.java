@@ -11,6 +11,7 @@ import enums.Rating;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class AttendeeService {
@@ -220,6 +221,41 @@ public class AttendeeService {
     public String viewSpeakerBio(int speakerID) {
         return speakerService.getSpeakerBio(speakerID);
     }
+
+    public String getSpeakerName(int speakerID) {
+        return speakerService.getSpeakerName(speakerID);
+    }
+
+    public int getSessionIDByName(String sessionName) {
+        return sessionService.getSessionIDByName(sessionName);
+    }
+
+    public List<SessionDTO> getSessionsAttendedByAttendee(int attendeeID){
+        return sessionService.getSessionsAttendedByAttendee(attendeeID);
+    }
+
+    public List<ConferenceDTO> getAvailableConferences(){
+        return conferenceService.getAllConferences();
+    }
+
+    public List<Integer> getRegisteredConferences(int attendeeID) {
+        try {
+            // Get all conferences
+            List<ConferenceDTO> allConferences = conferenceService.getAllConferences();
+
+            // Filter the conferences where the attendee is registered
+            return allConferences.stream()
+                    .filter(conference -> conference.getAttendees().contains(attendeeID))
+                    .map(ConferenceDTO::getConferenceID)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RepositoryException("Error retrieving registered conferences for attendee.", e);
+        }
+    }
+
+
+
+
 
     // Map Attendee to DTO
     private AttendeeDTO mapToDTO(Attendee attendee) {

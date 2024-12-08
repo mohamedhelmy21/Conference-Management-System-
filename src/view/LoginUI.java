@@ -1,10 +1,12 @@
 package view;
 
+import controller.AttendeeController;
 import controller.UserController;
 import dto.UserDTO;
 import exception.IncorrectPasswordException;
 import exception.UserNotFoundException;
 import intializer.AppInitializer;
+import service.AttendeeService;
 import service.LoginService;
 
 import javax.swing.*;
@@ -23,6 +25,8 @@ public class LoginUI extends JFrame {
     private JButton registerButton;
 
     private UserController userController;
+    private AttendeeController attendeeController;
+
 
     public LoginUI(UserController userController) {
         this.userController = userController;
@@ -78,7 +82,7 @@ public class LoginUI extends JFrame {
                 // Redirect based on role
                 switch (user.getRole()) {
                     case ATTENDEE:
-                        AttendeePortalUI attendeeUI = new AttendeePortalUI(user.getUserID(), user.getName());
+                        AttendeePortalUI attendeeUI = new AttendeePortalUI(attendeeController, user.getUserID());
                         attendeeUI.setVisible(true);
                         break;
                     case SPEAKER:
@@ -122,6 +126,9 @@ public class LoginUI extends JFrame {
         appInitializer.initialize();
         LoginService loginService = appInitializer.getLoginService();
         UserController userController = new UserController(loginService);
-        new LoginUI(userController);
+        AttendeeService attendeeService = appInitializer.getAttendeeService();
+        AttendeeController attendeeController = new AttendeeController(attendeeService);
+        LoginUI loginUI = new LoginUI(userController);
+        loginUI.attendeeController = attendeeController;
     }
 }

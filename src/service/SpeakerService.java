@@ -47,6 +47,22 @@ public class SpeakerService {
         }
     }
 
+    public String getSpeakerName(int speakerID) {
+        try {
+            // Retrieve the speaker from the repository
+            Speaker speaker = (Speaker) userRepository.findById(speakerID);
+            if (speaker == null || speaker.getRole() != Role.SPEAKER) {
+                throw new IllegalArgumentException("Speaker not found with ID: " + speakerID);
+            }
+
+            // Return the speaker's name
+            return speaker.getName();
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving speaker name.", e);
+        }
+    }
+
+
 
     public SpeakerDTO getSpeakerProfile(int speakerID){
         try {

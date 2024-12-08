@@ -1,0 +1,11 @@
+[ {
+  "userID" : 1,
+  "name" : "Jane Doe",
+  "email" : "jane.doe@example.com",
+  "password" : "password123",
+  "role" : "SPEAKER",
+  "bio" : "AI Expert",
+  "expertise" : "Artificial Intelligence",
+  "organization" : "TechCorp",
+  "sessionsIDs" : [ ]
+} ]

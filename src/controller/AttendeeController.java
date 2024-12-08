@@ -21,6 +21,14 @@ public class AttendeeController {
         return attendeeService.getAvailableSessions(conferenceID); // Service handles session retrieval
     }
 
+    public List<ConferenceDTO> getAvailableConferences(){
+        return attendeeService.getAvailableConferences();
+    }
+
+    public List<Integer> getRegisteredConferences(int attendeeID) {
+        return attendeeService.getRegisteredConferences(attendeeID);
+    }
+
     // Add session to schedule by session ID
     public boolean addSessionToSchedule(int attendeeID, int sessionID) {
         try {
@@ -48,15 +56,26 @@ public class AttendeeController {
         return attendeeService.viewSchedule(attendeeID);
     }
 
-    // Register attendee to a conference
     public boolean registerForConference(int attendeeID, int conferenceID) {
         try {
+            List<Integer> registeredConferences = attendeeService.getRegisteredConferences(attendeeID);
+            if (registeredConferences.contains(conferenceID)) {
+                throw new IllegalArgumentException("You are already registered for this conference.");
+            }
             attendeeService.registerAttendeeToConference(attendeeID, conferenceID);
             return true;
         } catch (Exception e) {
             System.err.println("Error registering for conference: " + e.getMessage());
             return false;
         }
+    }
+
+    public int getSessionIDByName(String sessionName) {
+        return attendeeService.getSessionIDByName(sessionName);
+    }
+
+    public List<SessionDTO> getSessionsAttendedByAttendee(int attendeeID){
+        return attendeeService.getSessionsAttendedByAttendee(attendeeID);
     }
 
     // Submit feedback for a session
@@ -79,6 +98,11 @@ public class AttendeeController {
     public String viewSpeakerBio(int speakerID) {
         return attendeeService.viewSpeakerBio(speakerID);
     }
+
+    public String viewSpeakerName(int speakerID) {
+        return attendeeService.getSpeakerName(speakerID);
+    }
+
 
     // View conference details
     public ConferenceDTO viewConferenceDetails(int conferenceID) {

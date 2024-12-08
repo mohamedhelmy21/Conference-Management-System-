@@ -2,12 +2,14 @@ package service;
 
 import domain.Certificate;
 import dto.CertificateDTO;
+import dto.SessionDTO;
 import exception.RepositoryException;
 import repository.CertificateRepository;
 import utility.IDGenerator;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class CertificateService {
@@ -31,17 +33,25 @@ public class CertificateService {
             }
 
             // Get all sessions attended by the attendee via SessionService
-            List<Integer> attendedSessions = sessionService.getSessionsAttendedByAttendee(attendeeID);
+            List<SessionDTO> attendedSessions = sessionService.getSessionsAttendedByAttendee(attendeeID);
 
             // Ensure the attendee has attended at least one session
             if (attendedSessions.isEmpty()) {
                 throw new IllegalArgumentException("No attended sessions found for attendee: " + attendeeID);
             }
 
-            int certificateID = IDGenerator.generateId("Certificate");
-            String certificateText = generateCertificateText(attendeeID, attendedSessions);
+            List<String> sessionNames = attendedSessions.stream()
+                    .map(SessionDTO::getName)
+                    .collect(Collectors.toList());
 
-            Certificate certificate = new Certificate(certificateID, attendeeID, attendedSessions, certificateText);
+            List<Integer> sessionIDs = attendedSessions.stream()
+                    .map(SessionDTO::getSessionID)
+                    .collect(Collectors.toList());
+
+            int certificateID = IDGenerator.generateId("Certificate");
+            String certificateText = generateCertificateText(attendeeID, sessionIDs);
+
+            Certificate certificate = new Certificate(certificateID, attendeeID, sessionIDs, certificateText);
             certificateRepository.save(certificate);
 
             attendeeService.assignCertificateToAttendee(attendeeID, certificateID);

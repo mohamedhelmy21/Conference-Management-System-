@@ -69,6 +69,27 @@ public class SessionService {
         }
     }
 
+    public int getSessionIDByName(String sessionName) {
+        try {
+            // Retrieve all sessions from the repository
+            List<SessionDTO> sessions = sessionRepository.findAll().stream()
+                    .map(this::mapToDTO)
+                    .collect(Collectors.toList());
+
+            // Find the session by name
+            for (SessionDTO session : sessions) {
+                if (session.getName().equalsIgnoreCase(sessionName)) {
+                    return session.getSessionID();
+                }
+            }
+
+            throw new IllegalArgumentException("Session with name " + sessionName + " not found.");
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving sessions.", e);
+        }
+    }
+
+
     public List<SessionDTO> listSessionsByConference(int conferenceID){
         try{
             return sessionRepository.findByConferenceID(conferenceID).stream()
@@ -148,16 +169,17 @@ public class SessionService {
         }
     }
 
-    public List<Integer> getSessionsAttendedByAttendee(int attendeeID) {
+    public List<SessionDTO> getSessionsAttendedByAttendee(int attendeeID) {
         try {
             return sessionRepository.findAll().stream()
                     .filter(session -> session.getAttendedAttendees().contains(attendeeID))
-                    .map(Session::getSessionID)
+                    .map(this::mapToDTO) // Map each Session to a SessionDTO
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RepositoryException("Error retrieving attended sessions.", e);
         }
     }
+
 
     public void checkScheduleConflicts(List<Integer> attendeeSessionIDs, int newSessionID) {
         try {
