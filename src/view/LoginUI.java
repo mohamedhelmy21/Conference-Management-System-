@@ -1,6 +1,7 @@
 package view;
 
 import controller.AttendeeController;
+import controller.SpeakerController;
 import controller.UserController;
 import dto.UserDTO;
 import exception.IncorrectPasswordException;
@@ -8,6 +9,7 @@ import exception.UserNotFoundException;
 import intializer.AppInitializer;
 import service.AttendeeService;
 import service.LoginService;
+import service.SpeakerService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +28,7 @@ public class LoginUI extends JFrame {
 
     private UserController userController;
     AttendeeController attendeeController;
+    SpeakerController speakerController;
 
 
     public LoginUI(UserController userController) {
@@ -86,7 +89,7 @@ public class LoginUI extends JFrame {
                         attendeeUI.setVisible(true);
                         break;
                     case SPEAKER:
-                        SpeakerPortalUI speakerUI = new SpeakerPortalUI(user.getUserID(), user.getName());
+                        SpeakerPortalUI speakerUI = new SpeakerPortalUI(speakerController, userController, user.getUserID(), user.getName());
                         speakerUI.setVisible(true);
                         break;
                     case MANAGER:
@@ -128,7 +131,10 @@ public class LoginUI extends JFrame {
         UserController userController = new UserController(loginService);
         AttendeeService attendeeService = appInitializer.getAttendeeService();
         AttendeeController attendeeController = new AttendeeController(attendeeService);
+        SpeakerService speakerService = appInitializer.getSpeakerService();
+        SpeakerController speakerController = new SpeakerController(speakerService);
         LoginUI loginUI = new LoginUI(userController);
         loginUI.attendeeController = attendeeController;
+        loginUI.speakerController = speakerController;
     }
 }

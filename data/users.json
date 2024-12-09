@@ -1,14 +1,4 @@
 [ {
-  "userID" : 10,
-  "name" : "Jane Doe",
-  "email" : "jane.doe@example.com",
-  "password" : "password123",
-  "role" : "SPEAKER",
-  "bio" : "AI Expert",
-  "expertise" : "Artificial Intelligence",
-  "organization" : "TechCorp",
-  "sessionsIDs" : [ ]
-}, {
   "userID" : 15,
   "name" : "fakhry",
   "email" : "fakhry@gmail.com",
@@ -62,4 +52,41 @@
   "feedbacks" : [ ],
   "certificate" : -1,
   "conferenceID" : 1
+}, {
+  "userID" : 18,
+  "name" : "disha",
+  "email" : "disha@gmail.com",
+  "password" : "123",
+  "role" : "ATTENDEE",
+  "schedule" : {
+    "scheduleID" : 18,
+    "attendeeID" : 18,
+    "sessionsIDs" : [ 1 ]
+  },
+  "feedbacks" : [ 5 ],
+  "certificate" : -1,
+  "conferenceID" : 1
+}, {
+  "userID" : 19,
+  "name" : "zeyad",
+  "email" : "zeyad@gmail.com",
+  "password" : "123",
+  "role" : "ATTENDEE",
+  "schedule" : {
+    "scheduleID" : 19,
+    "attendeeID" : 19
+  },
+  "feedbacks" : [ 6 ],
+  "certificate" : -1,
+  "conferenceID" : 1
+}, {
+  "userID" : 10,
+  "name" : "Jane Doe",
+  "email" : "jane.doe@example.com",
+  "password" : "password123",
+  "role" : "SPEAKER",
+  "bio" : "AI ",
+  "expertise" : "Artificial Intelligence",
+  "organization" : "TechCorp",
+  "sessionsIDs" : [ 1 ]
 } ]
