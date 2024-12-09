@@ -1,9 +1,14 @@
 package view;
 
 import controller.AttendeeController;
+import controller.SpeakerController;
 import controller.UserController;
 import dto.*;
 import enums.Rating;
+import intializer.AppInitializer;
+import service.AttendeeService;
+import service.LoginService;
+import service.SpeakerService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -225,9 +230,17 @@ public class AttendeePortalUI extends JFrame {
             // Close the Attendee UI
             dispose();
 
-            // Redirect to Login UI
+            AppInitializer appInitializer = new AppInitializer();
+            appInitializer.initialize();
+            LoginService loginService = appInitializer.getLoginService();
+            UserController userController = new UserController(loginService);
+            AttendeeService attendeeService = appInitializer.getAttendeeService();
+            AttendeeController attendeeController = new AttendeeController(attendeeService);
+            SpeakerService speakerService = appInitializer.getSpeakerService();
+            SpeakerController speakerController = new SpeakerController(speakerService);
             LoginUI loginUI = new LoginUI(userController);
             loginUI.attendeeController = attendeeController;
+            loginUI.speakerController = speakerController;
             loginUI.setVisible(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(AttendeePortalUI.this, "Error logging out: " + ex.getMessage(),

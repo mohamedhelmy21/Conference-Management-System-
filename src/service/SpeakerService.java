@@ -104,6 +104,33 @@ public class SpeakerService {
         }
     }
 
+    public void updateSpeakerExpertise(int speakerID, String newExpertise){
+        try {
+            Speaker speaker = (Speaker) userRepository.findById(speakerID);
+            if (speaker == null || !speaker.getRole().equals(enums.Role.SPEAKER)) {
+                throw new IllegalArgumentException("Speaker not found or invalid role");
+            }
+            speaker.updateExpertise(newExpertise);
+            userRepository.save(speaker);
+        } catch (IOException e) {
+            throw new RepositoryException("Error updating speaker expertise.", e);
+        }
+    }
+
+    public void updateSpeakerOrganization(int speakerID, String newOrganization){
+        try {
+            Speaker speaker = (Speaker) userRepository.findById(speakerID);
+            if (speaker == null || !speaker.getRole().equals(enums.Role.SPEAKER)) {
+                throw new IllegalArgumentException("Speaker not found or invalid role");
+            }
+            speaker.updateOrganization(newOrganization);
+            userRepository.save(speaker);
+        } catch (IOException e) {
+            throw new RepositoryException("Error updating speaker organization.", e);
+        }
+    }
+
+
     public void addSessionToSpeaker(int speakerID, int sessionID) {
         try {
             Speaker speaker = (Speaker) userRepository.findById(speakerID);

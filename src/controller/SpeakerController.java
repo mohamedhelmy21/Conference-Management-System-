@@ -1,11 +1,14 @@
 package controller;
 
+import domain.Speaker;
 import dto.FeedbackDTO;
 import dto.SessionDTO;
 import dto.SpeakerDTO;
 import enums.Role;
+import exception.RepositoryException;
 import service.SpeakerService;
 
+import java.io.IOException;
 import java.util.List;
 
 public class SpeakerController {
@@ -26,6 +29,15 @@ public class SpeakerController {
     public void updateSpeakerBio(int speakerID, String newBio) {
         speakerService.updateSpeakerBio(speakerID, newBio);
     }
+
+    public void updateSpeakerExpertise(int speakerID, String newExpertise){
+        speakerService.updateSpeakerExpertise(speakerID, newExpertise);
+    }
+
+    public void updateSpeakerOrganization(int speakerID, String newOrganization){
+        speakerService.updateSpeakerOrganization(speakerID, newOrganization);
+    }
+
 
     public List<SessionDTO> listSpeakerSessions(int speakerID) {
         return speakerService.getSpeakerSessions(speakerID);

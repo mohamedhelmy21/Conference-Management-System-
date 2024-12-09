@@ -1,5 +1,6 @@
 package view;
 
+import controller.AttendeeController;
 import controller.SpeakerController;
 import controller.UserController;
 import dto.FeedbackDTO;
@@ -8,6 +9,10 @@ import dto.SpeakerDTO;
 import dto.UserDTO;
 import enums.Rating;
 import enums.Role;
+import intializer.AppInitializer;
+import service.AttendeeService;
+import service.LoginService;
+import service.SpeakerService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -115,7 +120,11 @@ public class SpeakerPortalUI extends JFrame {
 
     private void saveProfileDetails() {
         String newBio = bioField.getText();
+        String newExpertise = expertiseField.getText();
+        String newOrganization = organizationField.getText();
         speakerController.updateSpeakerBio(speakerID, newBio);
+        speakerController.updateSpeakerExpertise(speakerID, newExpertise);
+        speakerController.updateSpeakerOrganization(speakerID, newOrganization);
         JOptionPane.showMessageDialog(this, "Profile updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -140,8 +149,16 @@ public class SpeakerPortalUI extends JFrame {
             // Close the Attendee UI
             dispose();
 
-            // Redirect to Login UI
+            AppInitializer appInitializer = new AppInitializer();
+            appInitializer.initialize();
+            LoginService loginService = appInitializer.getLoginService();
+            UserController userController = new UserController(loginService);
+            AttendeeService attendeeService = appInitializer.getAttendeeService();
+            AttendeeController attendeeController = new AttendeeController(attendeeService);
+            SpeakerService speakerService = appInitializer.getSpeakerService();
+            SpeakerController speakerController = new SpeakerController(speakerService);
             LoginUI loginUI = new LoginUI(userController);
+            loginUI.attendeeController = attendeeController;
             loginUI.speakerController = speakerController;
             loginUI.setVisible(true);
         } catch (Exception ex) {

@@ -27,10 +27,18 @@ public class Speaker extends User implements Observer{
         this.sessionIDs = new ArrayList<>();
     }
 
-    public boolean updateBio(String newBio){
+    public void updateBio(String newBio){
         bio = newBio;
-        return true;
     }
+
+    public void updateExpertise(String newExpertise){
+        expertise = newExpertise;
+    }
+
+    public void updateOrganization(String newOrganization){
+        organization = newOrganization;
+    }
+
 
     public List<Integer> getSessionsIDs(){
         return sessionIDs;

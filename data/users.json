@@ -86,7 +86,7 @@
   "password" : "password123",
   "role" : "SPEAKER",
   "bio" : "AI ",
-  "expertise" : "Artificial Intelligence",
-  "organization" : "TechCorp",
+  "expertise" : "Neural Networks",
+  "organization" : "Tech Corp",
   "sessionsIDs" : [ 1 ]
 } ]
