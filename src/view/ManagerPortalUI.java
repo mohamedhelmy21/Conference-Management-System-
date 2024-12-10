@@ -85,6 +85,7 @@ public class ManagerPortalUI extends JFrame {
     private JLabel lblManagerEmail;
     private JButton logoutButton;
     private JButton viewReportButton;
+    private JButton generateCertificatesButton;
 
 
     // Controllers
@@ -95,6 +96,7 @@ public class ManagerPortalUI extends JFrame {
     private SpeakerController speakerController;
     private ReportController reportController;
     private AttendeeController attendeeController;
+    private CertificateController certificateController;
     private UserDTO manager;
 
     private int managerID;
@@ -105,6 +107,7 @@ public class ManagerPortalUI extends JFrame {
                            ConferenceController conferenceController,
                            SessionController sessionController, SpeakerController speakerController,
                            ReportController reportController, AttendeeController attendeeController,
+                           CertificateController certificateController,
                            UserDTO manager) {
         this.logoutHelper = new LogoutHelper(userController);
         this.conferenceManagerController = conferenceManagerController;
@@ -113,6 +116,7 @@ public class ManagerPortalUI extends JFrame {
         this.speakerController = speakerController;
         this.reportController = reportController;
         this.attendeeController = attendeeController;
+        this.certificateController = certificateController;
         this.manager = manager;
         this.managerID = manager.getUserID();
         this.managerName = manager.getName();
@@ -167,6 +171,7 @@ public class ManagerPortalUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Conference created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadConferencesIntoTable();
             loadConferencesIntoDropdown();
+            populateConferenceDropdown();
             refreshReportDropdowns();
             clearFormFields();
         } catch (Exception e) {
@@ -683,6 +688,27 @@ public class ManagerPortalUI extends JFrame {
         sessionDropdown.addActionListener(e -> handleSessionSelection());
         markAttendanceButton.addActionListener(e -> markAttendance());
         removeAttendeeButton.addActionListener(e -> removeAttendeeFromConference());
+        generateCertificatesButton.addActionListener(e -> {
+            try {
+                int selectedConferenceID = getSelectedConferenceID();
+                certificateController.generateCertificatesForConference(selectedConferenceID);
+                JOptionPane.showMessageDialog(this, "Certificates generated successfully for conference ID: " + selectedConferenceID,
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IllegalArgumentException ex) {
+                if (ex.getMessage().contains("already generated")) {
+                    JOptionPane.showMessageDialog(this, "Certificates have already been generated for this conference.",
+                            "Information", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error generating certificates: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error generating certificates: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        });
+
     }
 
     // Populate Conference Dropdown

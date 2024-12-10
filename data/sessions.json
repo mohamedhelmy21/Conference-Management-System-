@@ -1,15 +1,15 @@
 [ {
-  "sessionID" : 18,
-  "name" : "Testing Session1",
-  "dateTime" : "2024-12-10T20:09:07.127",
-  "room" : "E102",
+  "sessionID" : 22,
+  "name" : "Test Session",
+  "dateTime" : "2024-12-10T23:30:51.319",
+  "room" : "Room",
   "capacity" : 50,
   "availableSeats" : 49,
-  "signedUpAttendees" : [ 27 ],
-  "attendedAttendees" : [ 27 ],
-  "speakerID" : 26,
-  "description" : "testing",
+  "signedUpAttendees" : [ 29 ],
+  "attendedAttendees" : [ 29 ],
+  "speakerID" : 28,
+  "description" : "Description",
   "observers" : [ ],
-  "feedbacks" : [ 8 ],
-  "conferenceID" : 5
+  "feedbacks" : [ ],
+  "conferenceID" : 7
 } ]

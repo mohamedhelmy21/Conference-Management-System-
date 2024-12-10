@@ -2,12 +2,14 @@ package service;
 
 import domain.Certificate;
 import dto.CertificateDTO;
+import dto.ConferenceDTO;
 import dto.SessionDTO;
 import exception.RepositoryException;
 import repository.CertificateRepository;
 import utility.IDGenerator;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,34 +17,37 @@ import java.util.stream.Collectors;
 public class CertificateService {
     private final CertificateRepository certificateRepository;
     private final SessionService sessionService;
+    private final ConferenceService conferenceService;
     private AttendeeService attendeeService;
 
-    public CertificateService(CertificateRepository certificateRepository, SessionService sessionService) {
+    public CertificateService(CertificateRepository certificateRepository, SessionService sessionService, ConferenceService conferenceService) {
         this.certificateRepository = certificateRepository;
         this.sessionService = sessionService;
+        this.conferenceService = conferenceService;
     }
 
     public void setAttendeeService(AttendeeService attendeeService) {
         this.attendeeService = attendeeService;
     }
 
-    public CertificateDTO generateCertificate(int attendeeID){
+    public CertificateDTO generateCertificate(int attendeeID) {
         try {
             if (!attendeeService.doesAttendeeExist(attendeeID)) {
                 throw new IllegalArgumentException("Attendee does not exist");
             }
 
-            // Get all sessions attended by the attendee via SessionService
+            // **Check if a certificate already exists for this attendee**
+            Certificate existingCertificate = certificateRepository.findByAttendeeID(attendeeID);
+            if (existingCertificate != null) {
+                return mapToDTO(existingCertificate);
+            }
+
+            // Proceed with certificate generation if no existing certificate
             List<SessionDTO> attendedSessions = sessionService.getSessionsAttendedByAttendee(attendeeID);
 
-            // Ensure the attendee has attended at least one session
             if (attendedSessions.isEmpty()) {
                 throw new IllegalArgumentException("No attended sessions found for attendee: " + attendeeID);
             }
-
-            List<String> sessionNames = attendedSessions.stream()
-                    .map(SessionDTO::getName)
-                    .collect(Collectors.toList());
 
             List<Integer> sessionIDs = attendedSessions.stream()
                     .map(SessionDTO::getSessionID)
@@ -56,12 +61,41 @@ public class CertificateService {
 
             attendeeService.assignCertificateToAttendee(attendeeID, certificateID);
 
-
             return mapToDTO(certificate);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new RepositoryException("Error generating certificate", e);
         }
     }
+
+
+    public void generateCertificatesForConference(int conferenceID) {
+        try {
+            // Check if the conference has ended
+            ConferenceDTO conference = conferenceService.getConferenceDetails(conferenceID);
+            if (conference == null || conference.getEndDate().isAfter(LocalDateTime.now())) {
+                throw new IllegalArgumentException("Conference has not ended yet.");
+            }
+
+            // Get the list of attendees for the conference
+            List<Integer> attendeeIDs = conference.getAttendees();
+
+            for (int attendeeID : attendeeIDs) {
+                try {
+                    CertificateDTO certificate = generateCertificate(attendeeID);
+                    System.out.println("Certificate generated for attendee: " + attendeeID);
+                } catch (IllegalArgumentException e) {
+                    if (e.getMessage().contains("already generated")) {
+                        System.out.println("Certificate already exists for attendee: " + attendeeID);
+                    } else {
+                        System.out.println("Skipping attendee " + attendeeID + ": " + e.getMessage());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RepositoryException("Error generating certificates for conference.", e);
+        }
+    }
+
 
     public CertificateDTO getCertificate(int certificateID) {
         try {

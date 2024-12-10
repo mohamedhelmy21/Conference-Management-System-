@@ -37,12 +37,13 @@ public class AppInitializer {
         sessionService = new SessionService(sessionRepository, conferenceService, feedbackService);
         feedbackService.setSessionService(sessionService);
 
-        certificateService = new CertificateService(certificateRepository, sessionService); // Placeholder for other dependencies
+        certificateService = new CertificateService(certificateRepository, sessionService, conferenceService); // Placeholder for other dependencies
 
         speakerService = new SpeakerService(userRepository, sessionService, feedbackService);
         sessionService.setSpeakerService(speakerService);
 
         attendeeService = new AttendeeService(userRepository, sessionService, certificateService, feedbackService, conferenceService, speakerService);
+        certificateService.setAttendeeService(attendeeService);
 
         conferenceManagerService = new ConferenceManagerService(userRepository, conferenceService, sessionService, speakerService);
 

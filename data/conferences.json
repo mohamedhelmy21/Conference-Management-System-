@@ -1,10 +1,10 @@
 [ {
-  "conferenceID" : 5,
-  "name" : "Testing Conference 1",
-  "description" : "i want to test my app",
-  "startDate" : "2024-12-10T20:09:07.08",
-  "endDate" : "2024-12-10T20:09:07.084",
-  "sessionsIDs" : [ 18 ],
-  "attendeesIDs" : [ 27 ],
+  "conferenceID" : 7,
+  "name" : "Test Conference 1",
+  "description" : "Testing Conference",
+  "startDate" : "2024-12-10T23:30:51.302",
+  "endDate" : "2024-12-10T23:35:00",
+  "sessionsIDs" : [ 22 ],
+  "attendeesIDs" : [ 29 ],
   "managersIDs" : [ 2 ]
 } ]

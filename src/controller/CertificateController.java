@@ -30,6 +30,15 @@ public class CertificateController {
         }
     }
 
+    public void generateCertificateForConference(int conferenceID) {
+        try {
+            certificateService.generateCertificatesForConference(conferenceID);
+            System.out.println("Certificates generated successfully for conference attendees");
+        } catch (Exception e) {
+            System.err.println("Error generating certificates: " + e.getMessage());
+        }
+    }
+
     public CertificateDTO getCertificateDetails(int certificateID) {
         try {
             return certificateService.getCertificate(certificateID);

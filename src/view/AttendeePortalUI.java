@@ -1,22 +1,18 @@
 package view;
 
 import controller.AttendeeController;
-import controller.SpeakerController;
 import controller.UserController;
 import dto.*;
 import enums.Rating;
 import enums.Role;
-import intializer.AppInitializer;
-import service.AttendeeService;
-import service.LoginService;
-import service.SpeakerService;
+import observer.Observer;
 import utility.LogoutHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class AttendeePortalUI extends JFrame {
+public class AttendeePortalUI extends JFrame  {
     private JTabbedPane tabbedPane;
     private JPanel mainPanel;
     private JTable conferenceScheduleTable;

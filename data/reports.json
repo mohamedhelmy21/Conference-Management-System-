@@ -1,15 +1,1 @@
-[ {
-  "reportID" : 6,
-  "reportType" : "ATTENDANCE",
-  "content" : "Session Attendance Report for Testing Session1:\nmohamed",
-  "generatedDate" : "2024-12-10T20:13:02.969165",
-  "author" : "Nancy",
-  "averageRating" : 0
-}, {
-  "reportID" : 7,
-  "reportType" : "FEEDBACK",
-  "content" : "Session Feedback Report for Testing Session1:\nComment: Testing Feedback | Rating: FOUR",
-  "generatedDate" : "2024-12-10T20:14:47.8830617",
-  "author" : "Nancy",
-  "averageRating" : 4
-} ]
+[ ]

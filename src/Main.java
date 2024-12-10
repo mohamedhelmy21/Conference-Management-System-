@@ -2,7 +2,6 @@ import controller.*;
 import intializer.AppInitializer;
 import service.*;
 import view.LoginUI;
-import dto.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,6 +22,10 @@ public class Main {
         ReportController reportController = new ReportController(reportService);
         ConferenceService conferenceService = appInitializer.getConferenceService();
         ConferenceController conferenceController = new ConferenceController(conferenceService);
+        CertificateService certificateService = appInitializer.getCertificateService();
+        CertificateController certificateController = new CertificateController(certificateService, conferenceService, attendeeService);
+        CertificateGeneratorTask certificateGeneratorTask = new CertificateGeneratorTask(conferenceService, certificateService);
+        certificateGeneratorTask.start();
         LoginUI loginUI = new LoginUI(userController);
         loginUI.attendeeController = attendeeController;
         loginUI.speakerController = speakerController;
@@ -30,5 +33,6 @@ public class Main {
         loginUI.conferenceController = conferenceController;
         loginUI.sessionController = sessionController;
         loginUI.reportController = reportController;
+        loginUI.certificateController = certificateController;
     }
 }

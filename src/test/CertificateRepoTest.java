@@ -38,10 +38,10 @@ public class CertificateRepoTest {
 
             // Test 4: Find certificates by attendee ID
             System.out.println("\n=== Test 4: Find Certificates by Attendee ID ===");
-            List<Certificate> attendeeCertificates = certificateRepository.findByAttendeeID(1);
-            for (Certificate certificate : attendeeCertificates) {
-                System.out.println(certificate);
-            }
+            //List<Certificate> attendeeCertificates = certificateRepository.findByAttendeeID(1);
+            //for (Certificate certificate : attendeeCertificates) {
+              //  System.out.println(certificate);
+            //}
 
             /*
             // Test 5: Delete certificate

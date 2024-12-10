@@ -5,27 +5,27 @@
   "password" : "password",
   "role" : "MANAGER"
 }, {
-  "userID" : 26,
-  "name" : "John Doe",
-  "email" : "john@example.com",
+  "userID" : 28,
+  "name" : "john doe",
+  "email" : "john@gmail.com",
   "password" : "123",
   "role" : "SPEAKER",
-  "bio" : "N/A",
-  "expertise" : "N/A",
-  "organization" : "N/A",
-  "sessionsIDs" : [ 18 ]
+  "bio" : "bio",
+  "expertise" : "expertise",
+  "organization" : "oragnizations",
+  "sessionsIDs" : [ 22 ]
 }, {
-  "userID" : 27,
+  "userID" : 29,
   "name" : "mohamed",
   "email" : "mohamed@gmail.com",
   "password" : "123",
   "role" : "ATTENDEE",
   "schedule" : {
-    "scheduleID" : 27,
-    "attendeeID" : 27,
-    "sessionsIDs" : [ 18 ]
+    "scheduleID" : 29,
+    "attendeeID" : 29,
+    "sessionsIDs" : [ 22 ]
   },
-  "feedbacks" : [ 8 ],
-  "certificate" : -1,
-  "conferenceID" : 5
+  "feedbacks" : [ ],
+  "certificate" : 5,
+  "conferenceID" : 7
 } ]

@@ -39,7 +39,7 @@ public class AttendeeService {
         }
     }
 
-    private Attendee getAttendeeById(int attendeeID) throws IOException {
+    public Attendee getAttendeeById(int attendeeID) throws IOException {
         // Retrieve the user from the repository
         User user = userRepository.findById(attendeeID);
 

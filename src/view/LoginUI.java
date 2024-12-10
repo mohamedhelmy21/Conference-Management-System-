@@ -29,6 +29,7 @@ public class LoginUI extends JFrame {
     public ConferenceController conferenceController;
     public SessionController sessionController;
     public ReportController reportController;
+    public CertificateController certificateController;
 
 
     public LoginUI(UserController userController) {
@@ -71,7 +72,7 @@ public class LoginUI extends JFrame {
                         speakerUI.setVisible(true);
                         break;
                     case MANAGER:
-                        ManagerPortalUI managerUI = new ManagerPortalUI(userController, conferenceManagerController, conferenceController,  sessionController, speakerController, reportController, attendeeController, user);
+                        ManagerPortalUI managerUI = new ManagerPortalUI(userController, conferenceManagerController, conferenceController,  sessionController, speakerController, reportController, attendeeController, certificateController, user);
                         managerUI.setVisible(true);
                         break;
                     default:

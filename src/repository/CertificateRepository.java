@@ -28,8 +28,14 @@ public class CertificateRepository extends BaseRepository<Certificate> {
         return certificate.getCertificateID();
     }
 
-    public List<Certificate> findByAttendeeID(int attendeeID) throws IOException {
-        return findAll().stream().filter(certificate -> certificate.getAttendeeID() == attendeeID).collect(Collectors.toList());
+    public Certificate findByAttendeeID(int attendeeID) throws IOException {
+        List<Certificate> certificates = findAll();
+        for (Certificate certificate : certificates) {
+            if (certificate.getAttendeeID() == attendeeID) {
+                return certificate;
+            }
+        }
+        return null; // No existing certificate found
     }
 
 }
