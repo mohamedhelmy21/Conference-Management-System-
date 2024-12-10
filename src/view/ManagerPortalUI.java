@@ -325,7 +325,7 @@ public class ManagerPortalUI extends JFrame {
         comboSessionConference.removeAllItems();
         List<ConferenceDTO> conferences = conferenceController.listAllConferences();
         for (ConferenceDTO conference : conferences) {
-            comboSessionConference.addItem(conference.getName() + " (ID: " + conference.getConferenceID() + ")");
+            comboSessionConference.addItem("ID: " + conference.getConferenceID() + " - " + conference.getName());
         }
     }
 
@@ -350,9 +350,27 @@ public class ManagerPortalUI extends JFrame {
 
     // Get Selected Conference ID
     private int getSelectedConferenceID() {
-        String selectedConference = (String) comboSessionConference.getSelectedItem();
-        return Integer.parseInt(selectedConference.replaceAll("[^0-9]", ""));
+        try {
+            String selectedConference = (String) comboSessionConference.getSelectedItem();
+            System.out.println("Selected Conference: " + selectedConference); // Debugging
+            if (selectedConference == null || selectedConference.isEmpty()) {
+                throw new IllegalArgumentException("No conference selected.");
+            }
+
+            // Assuming the format is "ID: [number] - Conference Name"
+            String[] parts = selectedConference.split(":");
+            if (parts.length < 2) {
+                throw new IllegalArgumentException("Invalid conference format.");
+            }
+
+            String idPart = parts[1].trim().split("-")[0].trim(); // Extract the ID part
+            return Integer.parseInt(idPart);
+        } catch (Exception e) {
+            System.err.println("Error parsing conference ID: " + e.getMessage());
+            return -1; // Default error value
+        }
     }
+
 
     // Create Session
     private void createSession() {
