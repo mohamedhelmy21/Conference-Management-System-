@@ -65,5 +65,19 @@ public class ConferenceController {
             return null;
         }
     }
+
+    public List<Integer> getConferenceAttendees(int conferenceID){
+        try {
+            ConferenceDTO conference = conferenceService.getConferenceDetails(conferenceID);
+            if (conference == null) {
+                System.out.println("Conference not found with ID: " + conferenceID);
+                return null;
+            }
+            return conferenceService.getConferenceAttendees(conferenceID);
+        } catch (Exception e) {
+            System.err.println("Error retrieving conference attendees: " + e.getMessage());
+            return null;
+        }
+    }
 }
 

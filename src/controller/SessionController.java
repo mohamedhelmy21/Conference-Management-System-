@@ -47,6 +47,19 @@ public class SessionController {
         }
     }
 
+    public List<Integer> getSignedUpAttendees(int sessionID){
+        try {
+            return sessionService.getSignedUpAttendees(sessionID);
+        } catch (Exception e) {
+            System.err.println("Error retrieving session attendees: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean hasAttendeeMarkedAttendance(int sessionID, int attendeeID) {
+        return sessionService.getAttendedAttendees(sessionID).contains(attendeeID);
+    }
+
 
     public List<FeedbackDTO> viewSessionFeedback(int sessionID) {
         try {

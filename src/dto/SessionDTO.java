@@ -1,6 +1,7 @@
 package dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class SessionDTO {
     private int sessionID;
@@ -8,16 +9,20 @@ public class SessionDTO {
     private LocalDateTime dateTime;
     private String room;
     private int capacity;
+    private List<Integer> signedUpAttendees;
+    private List<Integer> attendedAttendees;
     private int speakerID;
     private String description;
     private int conferenceID;
 
-    public SessionDTO(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description, int conferenceID) {
+    public SessionDTO(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, List<Integer> signedUpAttendees, List<Integer> attendedAttendees, int speakerID, String description, int conferenceID) {
         this.sessionID = sessionID;
         this.name = name;
         this.dateTime = dateTime;
         this.room = room;
         this.capacity = capacity;
+        this.signedUpAttendees = signedUpAttendees;
+        this.attendedAttendees = attendedAttendees;
         this.speakerID = speakerID;
         this.description = description;
         this.conferenceID = conferenceID;
@@ -81,5 +86,21 @@ public class SessionDTO {
 
     public int getConferenceID() {
         return conferenceID;
+    }
+
+    public List<Integer> getSignedUpAttendees() {
+        return signedUpAttendees;
+    }
+
+    public void setSignedUpAttendees(List<Integer> signedUpAttendees) {
+        this.signedUpAttendees = signedUpAttendees;
+    }
+
+    public List<Integer> getAttendedAttendees() {
+        return attendedAttendees;
+    }
+
+    public void setAttendedAttendees(List<Integer> attendedAttendees) {
+        this.attendedAttendees = attendedAttendees;
     }
 }

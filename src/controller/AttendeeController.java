@@ -151,6 +151,11 @@ public class AttendeeController {
         return attendeeService.viewConferenceDetails(conferenceID);
     }
 
+    public void updateAttendeeConferenceID(int attendeeID, int newConferenceID) {
+        attendeeService.updateConferenceID(attendeeID, newConferenceID);
+    }
+
+
     // Retrieve certificate details
     public CertificateDTO getCertificateDetails(int attendeeID) {
         try {

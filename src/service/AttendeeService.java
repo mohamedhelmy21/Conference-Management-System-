@@ -295,6 +295,16 @@ public class AttendeeService {
         }
     }
 
+    public void updateConferenceID(int attendeeID, int newConferenceID) {
+        try {
+            Attendee attendee = getAttendeeById(attendeeID);
+            attendee.setConferenceID(newConferenceID);
+            userRepository.save(attendee); // Persist the change
+        } catch (IOException e) {
+            throw new RepositoryException("Error updating attendee conference ID.", e);
+        }
+    }
+
 
 
 

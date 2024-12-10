@@ -270,10 +270,42 @@ public class SessionService {
             // Add the attendee to the session
             session.removeFromSignedUp(attendeeID);
 
+            if(session.hasAttended(attendeeID)){
+                session.getAttendedAttendees().remove(Integer.valueOf(attendeeID));
+            }
+
             // Update the session in the repository
             sessionRepository.save(session);
         } catch (IOException e) {
             throw new RepositoryException("Error adding attendee to session.", e);
+        }
+    }
+
+    public List<Integer> getSignedUpAttendees(int sessionID){
+        try {
+            // Retrieve the session details
+            Session session = sessionRepository.findById(sessionID);
+            if (session == null) {
+                throw new IllegalArgumentException("Session not found: " + sessionID);
+            }
+
+            return session.getSignedUpAttendees();
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving session attendees.", e);
+        }
+    }
+
+    public List<Integer> getAttendedAttendees(int sessionID){
+        try {
+            // Retrieve the session details
+            Session session = sessionRepository.findById(sessionID);
+            if (session == null) {
+                throw new IllegalArgumentException("Session not found: " + sessionID);
+            }
+
+            return session.getAttendedAttendees();
+        } catch (IOException e) {
+            throw new RepositoryException("Error retrieving session attendees.", e);
         }
     }
 
@@ -283,6 +315,8 @@ public class SessionService {
                 session.getDateTime(),
                 session.getRoom(),
                 session.getCapacity(),
+                session.getSignedUpAttendees(),
+                session.getAttendedAttendees(),
                 session.getSpeakerID(),
                 session.getDescription(),
                 session.getConferenceID());

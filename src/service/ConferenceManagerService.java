@@ -91,20 +91,24 @@ public class ConferenceManagerService {
 
     public void removeAttendeeFromConference(int conferenceID, int attendeeID) {
         try {
-            // Remove attendee from conference
-            conferenceService.removeAttendeeFromConference(conferenceID, attendeeID);
-
             // Remove attendee from all sessions in the conference
             List<SessionDTO> sessions = sessionService.listSessionsByConference(conferenceID);
             for (SessionDTO session : sessions) {
-                sessionService.removeAttendeeFromSession(attendeeID, session.getSessionID());
+                // Only attempt to remove the attendee if they are signed up for the session
+                if (session.getSignedUpAttendees().contains(attendeeID)) {
+                    sessionService.removeAttendeeFromSession(attendeeID, session.getSessionID());
+                }
             }
 
-            System.out.println("Attendee with ID " + attendeeID + " removed from all conference sessions.");
+            // Remove attendee from the conference
+            conferenceService.removeAttendeeFromConference(conferenceID, attendeeID);
+
+            System.out.println("Attendee with ID " + attendeeID + " removed from all conference sessions and the conference.");
         } catch (Exception e) {
             throw new RepositoryException("Error removing attendee from conference.", e);
         }
     }
+
 
     public void sendConferenceUpdate(int conferenceID, String updateMessage){
         try {

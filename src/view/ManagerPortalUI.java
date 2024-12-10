@@ -64,7 +64,7 @@ public class ManagerPortalUI extends JFrame {
     private JComboBox<String> conferenceDropdown;
     private JComboBox<String> sessionDropdown;
     private JTable sessionAttendeesTable;
-    private JButton saveAttendanceButton;
+    private JButton markAttendanceButton;
     private JTable conferenceAttendeesTable;
     private JButton removeAttendeeButton;
 
@@ -117,7 +117,7 @@ public class ManagerPortalUI extends JFrame {
         initializeManageConferencesPanel();
         initializeManageSessionsPanel();
         initializeManageSpeakersPanel();
-//        initializeManageAttendeesPanel();
+        initializeManageAttendeesPanel();
 //        initializeReportsPanel();
 //        initializeProfilePanel();
 
@@ -649,6 +649,134 @@ public class ManagerPortalUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Speaker deleted successfully.");
         }
     }
+
+    private void initializeManageAttendeesPanel() {
+
+        // Session Attendees Table
+        sessionAttendeesTable.setModel(new DefaultTableModel(new Object[]{"Attendee ID", "Name", "Email", "Attendance"}, 0) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 3 ? Boolean.class : String.class;
+            }
+        });
+
+
+        conferenceAttendeesTable.setModel(new DefaultTableModel(new Object[]{"Attendee ID", "Name", "Email"}, 0));
+
+        // Populate Conference Dropdown and Add Listeners
+        populateConferenceDropdown();
+
+        conferenceDropdown.addActionListener(e -> handleConferenceSelection());
+        sessionDropdown.addActionListener(e -> handleSessionSelection());
+        markAttendanceButton.addActionListener(e -> markAttendance());
+        removeAttendeeButton.addActionListener(e -> removeAttendeeFromConference());
+    }
+
+    // Populate Conference Dropdown
+    private void populateConferenceDropdown() {
+        conferenceDropdown.removeAllItems();
+        List<ConferenceDTO> conferences = conferenceController.listAllConferences();
+        for (ConferenceDTO conference : conferences) {
+            conferenceDropdown.addItem("ID: " + conference.getConferenceID() + " - " + conference.getName());
+        }
+    }
+
+    // Handle Conference Selection
+    private void handleConferenceSelection() {
+        String selectedConference = (String) conferenceDropdown.getSelectedItem();
+        if (selectedConference != null) {
+            int conferenceID = Integer.parseInt(selectedConference.split(":")[1].trim().split(" ")[0]);
+            populateSessionDropdown(conferenceID);
+            refreshConferenceAttendeesTable(conferenceID);
+        }
+    }
+
+    // Populate Session Dropdown
+    private void populateSessionDropdown(int conferenceID) {
+        sessionDropdown.removeAllItems();
+        List<SessionDTO> sessions = sessionController.listSessionsByConference(conferenceID);
+        for (SessionDTO session : sessions) {
+            sessionDropdown.addItem("ID: " + session.getSessionID() + " - " + session.getName());
+        }
+    }
+
+    // Handle Session Selection
+    private void handleSessionSelection() {
+        String selectedSession = (String) sessionDropdown.getSelectedItem();
+        if (selectedSession != null) {
+            int sessionID = Integer.parseInt(selectedSession.split(":")[1].trim().split(" ")[0]);
+            refreshSessionAttendeesTable(sessionID);
+        }
+    }
+
+    // Refresh Session Attendees Table
+    private void refreshSessionAttendeesTable(int sessionID) {
+        DefaultTableModel model = (DefaultTableModel) sessionAttendeesTable.getModel();
+        model.setRowCount(0); // Clear table
+        List<Integer> attendeeIDs = sessionController.getSignedUpAttendees(sessionID);
+        for (int attendeeID : attendeeIDs) {
+            String attendeeName = attendeeController.getAttendeeName(attendeeID);
+            String attendeeEmail = attendeeController.getAttendeeEmail(attendeeID);
+            model.addRow(new Object[]{attendeeID, attendeeName, attendeeEmail, false}); // Unchecked by default
+        }
+    }
+
+    // Refresh Conference Attendees Table
+    private void refreshConferenceAttendeesTable(int conferenceID) {
+        DefaultTableModel model = (DefaultTableModel) conferenceAttendeesTable.getModel();
+        model.setRowCount(0); // Clear table
+        List<Integer> attendeeIDs = conferenceController.getConferenceAttendees(conferenceID);
+        for (int attendeeID : attendeeIDs) {
+            String attendeeName = attendeeController.getAttendeeName(attendeeID);
+            String attendeeEmail = attendeeController.getAttendeeEmail(attendeeID);
+            model.addRow(new Object[]{attendeeID, attendeeName, attendeeEmail});
+        }
+    }
+
+    private void markAttendance() {
+        String selectedSession = (String) sessionDropdown.getSelectedItem();
+        if (selectedSession == null) {
+            JOptionPane.showMessageDialog(this, "Please select a session.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int sessionID = Integer.parseInt(selectedSession.split(":")[1].trim().split(" ")[0]);
+        DefaultTableModel model = (DefaultTableModel) sessionAttendeesTable.getModel();
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            boolean attended = (boolean) model.getValueAt(i, 3); // Checkbox value
+            int attendeeID = (int) model.getValueAt(i, 0); // Attendee ID
+
+            // Ensure attendance is only marked once
+            if (attended && !sessionController.hasAttendeeMarkedAttendance(sessionID, attendeeID)) {
+                conferenceManagerController.markAttendance(sessionID, attendeeID);
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Attendance updated successfully!");
+        refreshSessionAttendeesTable(sessionID);
+    }
+
+    // Remove Attendee
+    private void removeAttendeeFromConference() {
+        int selectedRow = conferenceAttendeesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select an attendee to remove.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int attendeeID = (int) conferenceAttendeesTable.getValueAt(selectedRow, 0);
+        String selectedConference = (String) conferenceDropdown.getSelectedItem();
+        int conferenceID = Integer.parseInt(selectedConference.split(":")[1].trim().split(" ")[0]);
+
+        // Remove attendee from the conference and update their conference ID
+        conferenceManagerController.removeAttendeeFromConference(conferenceID, attendeeID);
+        attendeeController.updateAttendeeConferenceID(attendeeID, -1);
+
+        JOptionPane.showMessageDialog(this, "Attendee removed successfully!");
+        refreshConferenceAttendeesTable(conferenceID);
+    }
+
 
 
 

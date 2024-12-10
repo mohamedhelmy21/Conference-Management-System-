@@ -39,28 +39,6 @@ public class LoginUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Initialize components
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(3, 2, 10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        JLabel emailLabel = new JLabel("Email:");
-        emailField = new JTextField();
-
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordField = new JPasswordField();
-
-        loginButton = new JButton("Login");
-        registerButton = new JButton("Register");
-
-        // Add components to panel
-        mainPanel.add(emailLabel);
-        mainPanel.add(emailField);
-        mainPanel.add(passwordLabel);
-        mainPanel.add(passwordField);
-        mainPanel.add(loginButton);
-        mainPanel.add(registerButton);
-
         // Add panel to frame
         add(mainPanel);
 
