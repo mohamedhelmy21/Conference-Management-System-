@@ -64,6 +64,16 @@ public class AttendeeService {
         }
     }
 
+    public String getAttendeeEmail(int attendeeID) {
+        try {
+            Attendee attendee = getAttendeeById(attendeeID); // Assuming getAttendeeById exists
+            return attendee.getEmail();
+        } catch (Exception e) {
+            throw new RepositoryException("Error retrieving attendee email.", e);
+        }
+    }
+
+
     public List<SessionDTO> getAvailableSessions(int conferenceID) {
         try {
             // Delegate to SessionService to fetch available sessions

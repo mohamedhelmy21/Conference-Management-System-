@@ -10,8 +10,9 @@ public class SessionDTO {
     private int capacity;
     private int speakerID;
     private String description;
+    private int conferenceID;
 
-    public SessionDTO(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description) {
+    public SessionDTO(int sessionID, String name, LocalDateTime dateTime, String room, int capacity, int speakerID, String description, int conferenceID) {
         this.sessionID = sessionID;
         this.name = name;
         this.dateTime = dateTime;
@@ -19,6 +20,7 @@ public class SessionDTO {
         this.capacity = capacity;
         this.speakerID = speakerID;
         this.description = description;
+        this.conferenceID = conferenceID;
     }
 
     public int getSessionID() {
@@ -75,5 +77,9 @@ public class SessionDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getConferenceID() {
+        return conferenceID;
     }
 }

@@ -1,5 +1,5 @@
 [ {
-  "sessionID" : 1,
+  "sessionID" : 10,
   "name" : "AI in Healthcare",
   "dateTime" : "2025-05-02T10:00:00",
   "room" : "Room 101",
@@ -11,5 +11,19 @@
   "description" : "Discussing AI advancements in healthcare.",
   "observers" : [ ],
   "feedbacks" : [ 1, 2, 3, 4, 5, 6 ],
-  "conferenceID" : 1
+  "conferenceID" : 4
+}, {
+  "sessionID" : 7,
+  "name" : "Testing Session",
+  "dateTime" : "2024-12-10T04:57:00",
+  "room" : "E102",
+  "capacity" : 30,
+  "availableSeats" : 30,
+  "signedUpAttendees" : [ ],
+  "attendedAttendees" : [ ],
+  "speakerID" : 10,
+  "description" : "to test",
+  "observers" : [ ],
+  "feedbacks" : [ ],
+  "conferenceID" : 2
 } ]

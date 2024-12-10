@@ -1,10 +1,12 @@
 package controller;
 
+import dto.ConferenceDTO;
 import dto.FeedbackDTO;
 import dto.SessionDTO;
 import service.FeedbackService;
 import service.SessionService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class SessionController {
@@ -24,6 +26,15 @@ public class SessionController {
             System.err.println("Error viewing session details: " + e.getMessage());
             return null;
         }
+    }
+
+    public void updateSession(int sessionID, String newName, LocalDateTime newDate, String newRoom, int newCapacity, String newDescription){
+        SessionDTO session = sessionService.viewSessionDetails(sessionID);
+        if (session == null) {
+            System.out.println("Session not found with ID: " + sessionID);
+        }
+
+        sessionService.updateSession(sessionID, newName, newDate, newRoom, newCapacity, newDescription);
     }
 
 

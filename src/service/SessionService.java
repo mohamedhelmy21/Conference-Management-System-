@@ -1,5 +1,6 @@
 package service;
 
+import domain.Conference;
 import domain.Session;
 import dto.FeedbackDTO;
 import dto.SessionDTO;
@@ -44,6 +45,28 @@ public class SessionService {
             return mapToDTO(session);
         } catch (IOException e){
             throw new RepositoryException("Error creating session.", e);
+        }
+    }
+
+    public void updateSession(int sessionID, String newName, LocalDateTime newDate, String newRoom, int newCapacity, String newDescription) {
+        try {
+            Session session = sessionRepository.findById(sessionID);
+            if (session == null) {
+                throw new IllegalArgumentException("Session not found.");
+            }
+
+
+            // Update session details
+            session.setName(newName);
+            session.setDateTime(newDate);
+            session.setRoom(newRoom);
+            session.setCapacity(newCapacity);
+            session.setDescription(newDescription);
+
+
+            sessionRepository.save(session);
+        } catch (IOException e) {
+            throw new RepositoryException("Error updating conference.", e);
         }
     }
 
@@ -130,13 +153,6 @@ public class SessionService {
         }
     }
 
-    public void updateSession(Session session) {
-        try {
-            sessionRepository.save(session);
-        } catch (IOException e) {
-            throw new RepositoryException("Error updating session.", e);
-        }
-    }
 
     public boolean doesSessionExist(int sessionID) {
         try {
@@ -268,6 +284,7 @@ public class SessionService {
                 session.getRoom(),
                 session.getCapacity(),
                 session.getSpeakerID(),
-                session.getDescription());
+                session.getDescription(),
+                session.getConferenceID());
     }
 }

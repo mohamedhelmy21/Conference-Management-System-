@@ -1,6 +1,7 @@
 package service;
 
 import domain.Speaker;
+import domain.User;
 import dto.FeedbackDTO;
 import dto.SpeakerDTO;
 import dto.SessionDTO;
@@ -131,6 +132,7 @@ public class SpeakerService {
     }
 
 
+
     public void addSessionToSpeaker(int speakerID, int sessionID) {
         try {
             Speaker speaker = (Speaker) userRepository.findById(speakerID);
@@ -145,6 +147,27 @@ public class SpeakerService {
 
             // Add the session ID to the speaker's session list
             speaker.getSessionsIDs().add(sessionID);
+
+            // Save the updated speaker
+            userRepository.save(speaker);
+        } catch (IOException e) {
+            throw new RepositoryException("Error adding session to speaker.", e);
+        }
+    }
+
+    public void removeSessionFromSpeaker(int speakerID, int sessionID){
+        try {
+            Speaker speaker = (Speaker) userRepository.findById(speakerID);
+            if (speaker == null || !speaker.getRole().equals(enums.Role.SPEAKER)) {
+                throw new IllegalArgumentException("Speaker not found or invalid role");
+            }
+
+            if (!speaker.getSessionsIDs().contains(sessionID)) {
+                throw new IllegalArgumentException("Session is not assigned to this speaker.");
+            }
+
+
+            speaker.getSessionsIDs().remove(sessionID);
 
             // Save the updated speaker
             userRepository.save(speaker);
@@ -190,7 +213,48 @@ public class SpeakerService {
         }
     }
 
-    private SpeakerDTO mapToDTO(Speaker speaker) {
+    public List<SpeakerDTO> listAllSpeakers() {
+        try {
+            return userRepository.findAll().stream()
+                    .filter(user -> user.getRole() == Role.SPEAKER) // Ensure it's a speaker
+                    .map(this::mapToDTO) // Explicit lambda for mapping
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RepositoryException("Error listing all speakers.", e);
+        }
+    }
+
+    public void deleteSpeaker(int speakerID) {
+        try {
+            // Fetch the speaker
+            Speaker speaker = (Speaker) userRepository.findById(speakerID);
+            if (speaker == null) {
+                throw new IllegalArgumentException("Speaker not found with ID: " + speakerID);
+            }
+
+            // Remove all associated sessions
+            List<Integer> sessionIDs = speaker.getSessionsIDs();
+            for (int sessionID : sessionIDs) {
+                SessionDTO session = sessionService.viewSessionDetails(sessionID);
+                sessionService.deleteSession(sessionID, session.getConferenceID()); // Assuming deleteSession(sessionID) exists in SessionService
+            }
+
+            // Remove the speaker from the repository
+            userRepository.delete(speakerID);
+
+            System.out.println("Speaker with ID " + speakerID + " and all associated sessions have been deleted.");
+        } catch (IOException e) {
+            throw new RepositoryException("Error deleting speaker and associated sessions.", e);
+        }
+    }
+
+
+
+    private SpeakerDTO mapToDTO(User user) {
+        if (!(user instanceof Speaker)) {
+            throw new IllegalArgumentException("User is not a Speaker.");
+        }
+        Speaker speaker = (Speaker) user;
         return new SpeakerDTO(
                 speaker.getUserID(),
                 speaker.getName(),

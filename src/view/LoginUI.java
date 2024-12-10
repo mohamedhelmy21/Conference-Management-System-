@@ -1,15 +1,11 @@
 package view;
 
-import controller.AttendeeController;
-import controller.SpeakerController;
-import controller.UserController;
+import controller.*;
 import dto.UserDTO;
 import exception.IncorrectPasswordException;
 import exception.UserNotFoundException;
 import intializer.AppInitializer;
-import service.AttendeeService;
-import service.LoginService;
-import service.SpeakerService;
+import service.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +25,10 @@ public class LoginUI extends JFrame {
     private UserController userController;
     AttendeeController attendeeController;
     SpeakerController speakerController;
+    ConferenceManagerController conferenceManagerController;
+    ConferenceController conferenceController;
+    SessionController sessionController;
+    ReportController reportController;
 
 
     public LoginUI(UserController userController) {
@@ -93,7 +93,8 @@ public class LoginUI extends JFrame {
                         speakerUI.setVisible(true);
                         break;
                     case MANAGER:
-                        ManagerPortalUI managerUI = new ManagerPortalUI(user.getUserID(), user.getName());
+                        ManagerPortalUI managerUI = new ManagerPortalUI(conferenceManagerController, conferenceController,  sessionController, speakerController, reportController, attendeeController, user.getUserID()
+                        );
                         managerUI.setVisible(true);
                         break;
                     default:
@@ -133,8 +134,21 @@ public class LoginUI extends JFrame {
         AttendeeController attendeeController = new AttendeeController(attendeeService);
         SpeakerService speakerService = appInitializer.getSpeakerService();
         SpeakerController speakerController = new SpeakerController(speakerService);
+        ConferenceManagerService conferenceManagerService = appInitializer.getConferenceManagerService();
+        ConferenceManagerController conferenceManagerController = new ConferenceManagerController(conferenceManagerService);
+        SessionService sessionService = appInitializer.getSessionService();
+        FeedbackService feedbackService = appInitializer.getFeedbackService();
+        SessionController sessionController = new SessionController(sessionService, feedbackService);
+        ReportService reportService = appInitializer.getReportService();
+        ReportController reportController = new ReportController(reportService);
+        ConferenceService conferenceService = appInitializer.getConferenceService();
+        ConferenceController conferenceController = new ConferenceController(conferenceService);
         LoginUI loginUI = new LoginUI(userController);
         loginUI.attendeeController = attendeeController;
         loginUI.speakerController = speakerController;
+        loginUI.conferenceManagerController = conferenceManagerController;
+        loginUI.conferenceController = conferenceController;
+        loginUI.sessionController = sessionController;
+        loginUI.reportController = reportController;
     }
 }

@@ -22,6 +22,16 @@ public class SpeakerController {
         return speakerService.getSpeakerProfile(speakerID);
     }
 
+    public List<SpeakerDTO> listAllSpeakers() {
+        try {
+            return speakerService.listAllSpeakers();
+        } catch (Exception e) {
+            System.err.println("Error retrieving speakers: " + e.getMessage());
+            return null;
+        }
+    }
+
+
     public String viewSpeakerBio(int speakerID) {
         return speakerService.getSpeakerBio(speakerID);
     }
@@ -39,12 +49,17 @@ public class SpeakerController {
     }
 
 
+
     public List<SessionDTO> listSpeakerSessions(int speakerID) {
         return speakerService.getSpeakerSessions(speakerID);
     }
 
     public List<FeedbackDTO> viewSessionFeedback(int sessionID) {
         return speakerService.getSessionFeedback(sessionID);
+    }
+
+    public void deleteSpeaker(int speakerID){
+        speakerService.deleteSpeaker(speakerID);
     }
 
     public double viewSessionAverageRating(int sessionID) {

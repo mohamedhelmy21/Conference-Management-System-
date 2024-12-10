@@ -1,8 +1,11 @@
 package controller;
 
 import dto.ConferenceDTO;
+import exception.RepositoryException;
 import service.ConferenceService;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ConferenceController {
@@ -27,6 +30,19 @@ public class ConferenceController {
             System.err.println("Error retrieving conferences: " + e.getMessage());
             return null;
         }
+    }
+
+    public void updateConference(int conferenceID, String newName, String newDescription, LocalDateTime newStartDate, LocalDateTime newEndDate){
+        ConferenceDTO conference = conferenceService.getConferenceDetails(conferenceID);
+        if (conference == null) {
+            System.out.println("Conference not found with ID: " + conferenceID);
+        }
+
+        conferenceService.updateConference(conferenceID, newName, newDescription, newStartDate, newEndDate);
+    }
+
+    public void deleteConference(int conferenceID) {
+        conferenceService.deleteConference(conferenceID);
     }
 
 

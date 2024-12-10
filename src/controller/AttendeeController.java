@@ -16,6 +16,24 @@ public class AttendeeController {
         this.attendeeService = attendeeService;
     }
 
+    public String getAttendeeName(int attendeeID) {
+        try {
+            return attendeeService.getAttendeeName(attendeeID);
+        } catch (Exception e) {
+            System.err.println("Error retrieving attendee name: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public String getAttendeeEmail(int attendeeID) {
+        try {
+            return attendeeService.getAttendeeEmail(attendeeID); // Assuming the service has this method
+        } catch (Exception e) {
+            System.err.println("Error retrieving attendee email: " + e.getMessage());
+            return null;
+        }
+    }
+
     // Display available sessions
     public List<SessionDTO> getAvailableSessions(int conferenceID) {
         return attendeeService.getAvailableSessions(conferenceID); // Service handles session retrieval

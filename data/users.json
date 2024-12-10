@@ -80,6 +80,22 @@
   "certificate" : -1,
   "conferenceID" : 1
 }, {
+  "userID" : 2,
+  "name" : "Nancy",
+  "email" : "nancy.manager@example.com",
+  "password" : "password",
+  "role" : "MANAGER"
+}, {
+  "userID" : 20,
+  "name" : "Dr. magdy",
+  "email" : "magdy@gmail.com",
+  "password" : "123",
+  "role" : "SPEAKER",
+  "bio" : "professional educator",
+  "expertise" : "AI",
+  "organization" : "UH-GAF",
+  "sessionsIDs" : [ ]
+}, {
   "userID" : 10,
   "name" : "Jane Doe",
   "email" : "jane.doe@example.com",
@@ -88,5 +104,18 @@
   "bio" : "AI ",
   "expertise" : "Neural Networks",
   "organization" : "Tech Corp",
-  "sessionsIDs" : [ 1 ]
+  "sessionsIDs" : [ 1, 2, 5, 6, 7 ]
+}, {
+  "userID" : 21,
+  "name" : "messi",
+  "email" : "messi@gmail.com",
+  "password" : "123",
+  "role" : "ATTENDEE",
+  "schedule" : {
+    "scheduleID" : 21,
+    "attendeeID" : 21
+  },
+  "feedbacks" : [ ],
+  "certificate" : -1,
+  "conferenceID" : 3
 } ]
