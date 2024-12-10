@@ -50,14 +50,6 @@ public class RegisterUI extends JFrame {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(RegisterUI.this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        };
-    }
-
-    public static void main(String[] args) {
-        AppInitializer appInitializer = new AppInitializer();
-        appInitializer.initialize();
-        LoginService loginService = appInitializer.getLoginService();
-        UserController userController = new UserController(loginService);
-        SwingUtilities.invokeLater(() -> new RegisterUI(userController).setVisible(true));
+        }
     }
 }

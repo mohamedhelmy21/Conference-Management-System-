@@ -5,6 +5,6 @@
   "startDate" : "2024-12-10T23:30:51.302",
   "endDate" : "2024-12-10T23:35:00",
   "sessionsIDs" : [ 22 ],
-  "attendeesIDs" : [ 29 ],
+  "attendeesIDs" : [ 29, 30 ],
   "managersIDs" : [ 2 ]
 } ]

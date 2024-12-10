@@ -28,4 +28,18 @@
   "feedbacks" : [ ],
   "certificate" : 5,
   "conferenceID" : 7
+}, {
+  "userID" : 30,
+  "name" : "kareem",
+  "email" : "kareem@gmail.com",
+  "password" : "123",
+  "role" : "ATTENDEE",
+  "schedule" : {
+    "scheduleID" : 30,
+    "attendeeID" : 30,
+    "sessionsIDs" : [ 22 ]
+  },
+  "feedbacks" : [ ],
+  "certificate" : 6,
+  "conferenceID" : 7
 } ]
