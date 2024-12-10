@@ -15,11 +15,11 @@ public class ReportRepoTest {
             ReportRepository reportRepository = ReportRepository.getInstance(filePath);
 
             // Test 1: Add reports
-            System.out.println("=== Test 1: Add Reports ===");
-            Report report1 = new Report(501, "Summary of GAF-AI 2025", "Conference Manager", 5);
-            Report report2 = new Report(502, "Session Engagement Analysis", "Data Analyst", 4);
-            reportRepository.save(report1);
-            reportRepository.save(report2);
+            //System.out.println("=== Test 1: Add Reports ===");
+            //Report report1 = new Report(501, "Summary of GAF-AI 2025", "Conference Manager", 5);
+            //Report report2 = new Report(502, "Session Engagement Analysis", "Data Analyst", 4);
+            //reportRepository.save(report1);
+            //reportRepository.save(report2);
 
             // Test 2: Retrieve all reports
             System.out.println("\n=== Test 2: Retrieve All Reports ===");

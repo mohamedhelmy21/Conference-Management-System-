@@ -1,16 +1,20 @@
 package dto;
 
+import enums.ReportType;
+
 import java.time.LocalDateTime;
 
 public class ReportDTO {
     private int reportID;
+    private ReportType reportType;
     private String content;
     private String author;
     private LocalDateTime generatedDate;
     private int averageRating;
 
-    public ReportDTO(int reportID, String content, String author, LocalDateTime generatedDate, int averageRating) {
+    public ReportDTO(int reportID, ReportType reportType, String content, String author, LocalDateTime generatedDate, int averageRating) {
         this.reportID = reportID;
+        this.reportType = reportType;
         this.content = content;
         this.author = author;
         this.generatedDate = generatedDate;
@@ -55,5 +59,9 @@ public class ReportDTO {
 
     public void setAverageRating(int averageRating) {
         this.averageRating = averageRating;
+    }
+
+    public ReportType getReportType() {
+        return reportType;
     }
 }

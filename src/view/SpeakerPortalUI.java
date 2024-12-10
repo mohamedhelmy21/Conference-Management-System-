@@ -13,6 +13,7 @@ import intializer.AppInitializer;
 import service.AttendeeService;
 import service.LoginService;
 import service.SpeakerService;
+import utility.LogoutHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -39,16 +40,22 @@ public class SpeakerPortalUI extends JFrame {
     private JLabel speakerEmailLabel;
     private JButton logoutButton;
 
+    private final LogoutHelper logoutHelper;
     private final SpeakerController speakerController;
     private final UserController userController;
-    private final int speakerID;
-    private final String speakerName;
+    private int speakerID;
+    private String speakerName;
+    private String speakerEmail;
+    private UserDTO speaker;
 
-    public SpeakerPortalUI(SpeakerController speakerController, UserController userController, int speakerID, String speakerName) {
+    public SpeakerPortalUI(SpeakerController speakerController, UserController userController, UserDTO speaker) {
+        this.logoutHelper = new LogoutHelper(userController);
         this.speakerController = speakerController;
         this.userController = userController;
-        this.speakerID = speakerID;
-        this.speakerName = speakerName;
+        this.speaker = speaker;
+        this.speakerID = speaker.getUserID();
+        this.speakerName = speaker.getName();
+        this.speakerEmail = speaker.getEmail();
 
         setTitle("Speaker Portal");
         setContentPane(mainPanel);
@@ -138,33 +145,8 @@ public class SpeakerPortalUI extends JFrame {
         organizationField.setText(speaker.getOrganization());
     }
 
-    private void logout(){
-        try {
-            // Create a temporary UserDTO with attendee details
-            UserDTO userDTO = new UserDTO(speakerID, speakerName, "", Role.SPEAKER);
-
-            // Perform logout
-            userController.logout(userDTO);
-
-            // Close the Attendee UI
-            dispose();
-
-            AppInitializer appInitializer = new AppInitializer();
-            appInitializer.initialize();
-            LoginService loginService = appInitializer.getLoginService();
-            UserController userController = new UserController(loginService);
-            AttendeeService attendeeService = appInitializer.getAttendeeService();
-            AttendeeController attendeeController = new AttendeeController(attendeeService);
-            SpeakerService speakerService = appInitializer.getSpeakerService();
-            SpeakerController speakerController = new SpeakerController(speakerService);
-            LoginUI loginUI = new LoginUI(userController);
-            loginUI.attendeeController = attendeeController;
-            loginUI.speakerController = speakerController;
-            loginUI.setVisible(true);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(SpeakerPortalUI.this, "Error logging out: " + ex.getMessage(),
-                    "Logout Error", JOptionPane.ERROR_MESSAGE);
-        }
+    private void logout() {
+        logoutHelper.performLogout(this, speakerID, speakerName, speakerEmail, Role.SPEAKER);
     }
 }
 

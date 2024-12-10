@@ -1,6 +1,7 @@
 package test;
 
 import domain.Report;
+import dto.ReportDTO;
 import repository.*;
 import service.*;
 
@@ -46,17 +47,17 @@ public class ReportServiceTest {
 
             // Test: Generate Session Feedback Report
             System.out.println("Generating Session Feedback Report...");
-            Report sessionReport = reportService.generateSessionFeedbackReport(1, "Manager");
+            ReportDTO sessionReport = reportService.generateSessionFeedbackReport(1, "Manager");
             System.out.println("Session Feedback Report:\n" + sessionReport.getContent());
 
             // Test: Generate Conference Attendance Report
             System.out.println("\nGenerating Conference Attendance Report...");
-            Report attendanceReport = reportService.generateConferenceAttendanceReport(1, "Manager");
+            ReportDTO attendanceReport = reportService.generateConferenceAttendanceReport(1, "Manager");
             System.out.println("Conference Attendance Report:\n" + attendanceReport.getContent());
 
             // Test: Retrieve Report
             System.out.println("\nRetrieving Report...");
-            Report retrievedReport = reportService.getReportById(sessionReport.getReportID());
+            ReportDTO retrievedReport = reportService.getReportById(sessionReport.getReportID());
             System.out.println("Retrieved Report:\n" + retrievedReport.getContent());
 
         } catch (Exception e) {

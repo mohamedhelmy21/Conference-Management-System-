@@ -1,9 +1,11 @@
 package domain;
 
 import java.time.LocalDateTime;
+import enums.ReportType;
 
 public class Report {
     private int reportID;
+    private ReportType reportType;
     private String content;
     private LocalDateTime generatedDate;
     private String author;
@@ -13,19 +15,13 @@ public class Report {
         //default constructor
     }
 
-    public Report(int reportID, String content, String author) {
-        this.reportID = reportID;
-        this.content = content;
-        this.generatedDate = generatedDate;
-        this.author = author;
-    }
 
-    public Report(int reportID, String content, String author, int averageRating) {
+    public Report(int reportID, ReportType reportType, String content, String author) {
         this.reportID = reportID;
+        this.reportType = reportType;
         this.content = content;
         this.generatedDate = LocalDateTime.now();
         this.author = author;
-        this.averageRating = averageRating;
     }
 
     public int getReportID() {
@@ -46,5 +42,13 @@ public class Report {
 
     public int getAverageRating() {
         return averageRating;
+    }
+
+    public void setAverageRating(int averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public ReportType getReportType() {
+        return reportType;
     }
 }

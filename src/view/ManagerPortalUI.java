@@ -1,13 +1,14 @@
 package view;
 
 import controller.*;
-import dto.ConferenceDTO;
-import dto.SessionDTO;
-import dto.SpeakerDTO;
+import dto.*;
+import enums.Role;
+import utility.LogoutHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -58,6 +59,8 @@ public class ManagerPortalUI extends JFrame {
     private JTextField txtSpeakerOrganization;
     private JButton createSpeakerButton;
     private JTable speakersTable;
+    private JButton editSpeakerButton;
+    private JButton deleteSpeakerButton;
 
 
     // Manage Attendees Fields
@@ -72,38 +75,48 @@ public class ManagerPortalUI extends JFrame {
     private JButton generateFeedbackReportButton;
     private JButton generateAttendanceReportButton;
     private JTable reportsTable;
+    private JComboBox reportConferenceDropdown;
+    private JComboBox reportSessionDropdown;
+    private JButton generateSessionAttendanceReportButton;
 
     // Profile Fields
+    private JLabel lblManagerID;
     private JLabel lblManagerName;
     private JLabel lblManagerEmail;
-    private JLabel lblConferencesManaged;
     private JButton logoutButton;
-    private JButton editSpeakerButton;
-    private JButton deleteSpeakerButton;
+    private JButton viewReportButton;
 
 
     // Controllers
+    private final LogoutHelper logoutHelper;
     private ConferenceManagerController conferenceManagerController;
     private ConferenceController conferenceController;
     private SessionController sessionController;
     private SpeakerController speakerController;
     private ReportController reportController;
     private AttendeeController attendeeController;
+    private UserDTO manager;
 
-    private int managerID; // Current manager's ID
+    private int managerID;
+    private String managerName;
+    private String managerEmail;
 
-    public ManagerPortalUI(ConferenceManagerController conferenceManagerController,
+    public ManagerPortalUI(UserController userController, ConferenceManagerController conferenceManagerController,
                            ConferenceController conferenceController,
                            SessionController sessionController, SpeakerController speakerController,
                            ReportController reportController, AttendeeController attendeeController,
-                           int managerID) {
+                           UserDTO manager) {
+        this.logoutHelper = new LogoutHelper(userController);
         this.conferenceManagerController = conferenceManagerController;
         this.conferenceController = conferenceController;
         this.sessionController = sessionController;
         this.speakerController = speakerController;
         this.reportController = reportController;
         this.attendeeController = attendeeController;
-        this.managerID = managerID;
+        this.manager = manager;
+        this.managerID = manager.getUserID();
+        this.managerName = manager.getName();
+        this.managerEmail = manager.getEmail();
 
         setTitle("Manager Portal");
         setSize(1200, 800);
@@ -113,13 +126,12 @@ public class ManagerPortalUI extends JFrame {
 
     private void initializeUI() {
         // Initialize all panels
-//        initializeDashboardPanel();
         initializeManageConferencesPanel();
         initializeManageSessionsPanel();
         initializeManageSpeakersPanel();
         initializeManageAttendeesPanel();
-//        initializeReportsPanel();
-//        initializeProfilePanel();
+        initializeReportsPanel();
+        initializeProfilePanel(managerID, managerName, managerEmail);
 
         add(tabbedPane);
     }
@@ -155,6 +167,7 @@ public class ManagerPortalUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Conference created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadConferencesIntoTable();
             loadConferencesIntoDropdown();
+            refreshReportDropdowns();
             clearFormFields();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error creating conference: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -777,236 +790,268 @@ public class ManagerPortalUI extends JFrame {
         refreshConferenceAttendeesTable(conferenceID);
     }
 
+    private void initializeReportsPanel() {
+
+        reportsTable.setModel(new DefaultTableModel(new Object[]{"ID", "Type", "Generated Date"}, 0));
+
+        // Event Listeners
+        refreshReportDropdowns();
+        initializeReportActions();
+        refreshReportsTable();
+
+    }
+
+    // Initialize Event Listeners for Reports Tab
+    private void initializeReportActions() {
+        // Generate Feedback Report
+        generateFeedbackReportButton.addActionListener(e -> generateFeedbackReport());
+
+        // Generate Session Attendance Report
+        generateSessionAttendanceReportButton.addActionListener(e -> generateSessionAttendanceReport());
+
+
+        // Generate Attendance Report
+        generateAttendanceReportButton.addActionListener(e -> generateConferenceAttendanceReport());
+
+        // View Selected Report
+        viewReportButton.addActionListener(e -> viewSelectedReport());
+    }
+
+    // Refresh Dropdowns
+    private void refreshReportDropdowns() {
+        try {
+            // Remove existing listeners to avoid conflicts
+            for (ActionListener listener : reportConferenceDropdown.getActionListeners()) {
+                reportConferenceDropdown.removeActionListener(listener);
+            }
+
+            // Populate Conference Dropdown
+            List<ConferenceDTO> conferences = conferenceController.listAllConferences();
+            reportConferenceDropdown.removeAllItems();
+            for (ConferenceDTO conference : conferences) {
+                reportConferenceDropdown.addItem(conference.getName() + " (ID: " + conference.getConferenceID() + ")");
+            }
+
+            // Add ActionListener
+            reportConferenceDropdown.addActionListener(e -> {
+                try {
+                    if (reportConferenceDropdown.getSelectedItem() != null) {
+                        int selectedConferenceID = getSelectedReportConferenceID();
+                        populateReportSessionDropdown(selectedConferenceID);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error refreshing report dropdowns: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+
+    private void populateReportSessionDropdown(int conferenceID) {
+        try {
+            System.out.println("Populating reportSessionDropdown for Conference ID: " + conferenceID);
+
+            List<SessionDTO> sessions = sessionController.listSessionsByConference(conferenceID);
+            reportSessionDropdown.removeAllItems();
+            for (SessionDTO session : sessions) {
+                reportSessionDropdown.addItem(session.getName() + " (ID: " + session.getSessionID() + ")");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error populating session dropdown: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
 
 
 
+    // Get Selected Conference ID
+    private int getSelectedReportConferenceID() {
+        try {
+            String selectedConference = (String) reportConferenceDropdown.getSelectedItem();
+            System.out.println("Selected Conference Dropdown Item: " + selectedConference);
+
+            if (selectedConference == null || selectedConference.isEmpty()) {
+                throw new IllegalArgumentException("No conference selected.");
+            }
+
+            // Use regex to extract the number inside "ID: X"
+            String idString = selectedConference.replaceAll(".*\\(ID: (\\d+)\\).*", "$1");
+            System.out.println("Extracted Conference ID: " + idString);
+
+            if (idString.isEmpty()) {
+                throw new IllegalArgumentException("Invalid conference selection.");
+            }
+
+            return Integer.parseInt(idString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error fetching selected conference ID: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            throw e; // Re-throw to prevent further processing
+        }
+    }
 
 
-//
-//
-//
-//    private void initializeManageSpeakersPanel() {
-//
-//
-//        JPanel formPanel = new JPanel(new GridLayout(6, 2));
-//        formPanel.add(new JLabel("Speaker Name:"));
-//        formPanel.add(txtSpeakerName);
-//
-//        formPanel.add(new JLabel("Email:"));
-//        formPanel.add(txtSpeakerEmail);
-//
-//        formPanel.add(new JLabel("Password:"));
-//        formPanel.add(txtSpeakerPassword);
-//
-//        formPanel.add(new JLabel("Bio:"));
-//        formPanel.add(new JScrollPane(txtSpeakerBio));
-//
-//        formPanel.add(new JLabel("Expertise:"));
-//        formPanel.add(txtSpeakerExpertise);
-//
-//        formPanel.add(new JLabel("Organization:"));
-//        formPanel.add(txtSpeakerOrganization);
-//
-//        formPanel.add(createSpeakerButton);
-//
-//        JScrollPane speakersScrollPane = new JScrollPane(speakersTable);
-//
-//        manageSpeakersPanel.add(formPanel, BorderLayout.NORTH);
-//        manageSpeakersPanel.add(speakersScrollPane, BorderLayout.CENTER);
-//
-//        createSpeakerButton.addActionListener(e -> createSpeaker());
-//        refreshSpeakersTable();
-//    }
-//
-//    private void createSpeaker() {
-//        try {
-//            String name = txtSpeakerName.getText();
-//            String email = txtSpeakerEmail.getText();
-//            String password = txtSpeakerPassword.getText();
-//            String bio = txtSpeakerBio.getText();
-//            String expertise = txtSpeakerExpertise.getText();
-//            String organization = txtSpeakerOrganization.getText();
-//
-//            SpeakerDTO speakerDTO = conferenceManagerController.createSpeakerAccount(managerID, name, email, password, bio, expertise, organization);
-//            JOptionPane.showMessageDialog(this, "Speaker created: " + speakerDTO.getName());
-//            refreshSpeakersTable();
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error creating speaker: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//    private void refreshSpeakersTable() {
-//        DefaultTableModel model = (DefaultTableModel) speakersTable.getModel();
-//        model.setRowCount(0);
-//        List<SpeakerDTO> speakers = speakerController.listAllSpeakers();
-//        for (SpeakerDTO speaker : speakers) {
-//            model.addRow(new Object[]{speaker.getSpeakerID(), speaker.getName(), speaker.getEmail(), speaker.getExpertise(), speaker.getOrganization()});
-//        }
-//    }
-//
-//
-//    private void initializeManageAttendeesPanel() {
-//
-//        JPanel dropdownPanel = new JPanel(new FlowLayout());
-//        dropdownPanel.add(new JLabel("Select Session:"));
-//        dropdownPanel.add(sessionDropdown);
-//
-//        saveAttendanceButton.setText("Mark Attendance");
-//        dropdownPanel.add(saveAttendanceButton);
-//
-//        sessionAttendeesTable.setModel(new DefaultTableModel(new Object[]{"Attendee Name", "Email", "Attended"}, 0));
-//        JScrollPane attendeeScrollPane = new JScrollPane(sessionAttendeesTable);
-//
-//        manageAttendeesPanel.add(dropdownPanel, BorderLayout.NORTH);
-//        manageAttendeesPanel.add(attendeeScrollPane, BorderLayout.CENTER);
-//
-//        saveAttendanceButton.addActionListener(e -> markAttendance());
-//        refreshAttendeesData();
-//    }
-//
-//    private void markAttendance() {
-//        int sessionID = getSelectedSessionID();
-//        DefaultTableModel model = (DefaultTableModel) sessionAttendeesTable.getModel();
-//        for (int i = 0; i < model.getRowCount(); i++) {
-//            boolean attended = (boolean) model.getValueAt(i, 2);
-//            int attendeeID = (int) model.getValueAt(i, 0);
-//            if (attended) {
-//                conferenceManagerController.markAttendance(sessionID, attendeeID);
-//            }
-//        }
-//        JOptionPane.showMessageDialog(this, "Attendance updated successfully!");
-//    }
-//
-//    private void refreshAttendeesData() {
-//        try {
-//            int selectedSessionRow = sessionsTable.getSelectedRow();
-//            if (selectedSessionRow == -1) {
-//                JOptionPane.showMessageDialog(this, "Please select a session to view its attendees.", "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            // Retrieve the session ID from the selected row
-//            int sessionID = (int) sessionsTable.getValueAt(selectedSessionRow, 0);
-//
-//            // Fetch the list of attendees for the selected session
-//            List<Integer> attendeeIDs = sessionController.getSessionAttendees(sessionID);
-//
-//            // Clear the attendees table
-//            DefaultTableModel model = (DefaultTableModel) attendeesTable.getModel();
-//            model.setRowCount(0);
-//
-//            // Populate the attendees table
-//            for (int attendeeID : attendeeIDs) {
-//                String attendeeName = attendeeController.getAttendeeName(attendeeID);
-//                String attendeeEmail = attendeeController.getAttendeeEmail(attendeeID); // Assuming getAttendeeEmail is implemented
-//                model.addRow(new Object[]{attendeeID, attendeeName, attendeeEmail});
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error refreshing attendees data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//
-//
-//    private void initializeReportsPanel() {
-//
-//        JPanel buttonPanel = new JPanel(new FlowLayout());
-//        generateFeedbackReportButton.setText("Generate Feedback Report");
-//        generateAttendanceReportButton.setText("Generate Attendance Report");
-//        buttonPanel.add(generateFeedbackReportButton);
-//        buttonPanel.add(generateAttendanceReportButton);
-//
-//        JScrollPane reportScrollPane = new JScrollPane(reportsTable);
-//
-//        reportsPanel.add(buttonPanel, BorderLayout.NORTH);
-//        reportsPanel.add(reportScrollPane, BorderLayout.CENTER);
-//
-//        generateFeedbackReportButton.addActionListener(e -> generateFeedbackReport());
-//        generateAttendanceReportButton.addActionListener(e -> generateAttendanceReport());
-//        refreshReportsTable();
-//    }
-//
-//    private void generateFeedbackReport() {
-//        try {
-//            int selectedSessionRow = sessionsTable.getSelectedRow();
-//            if (selectedSessionRow == -1) {
-//                JOptionPane.showMessageDialog(this, "Please select a session to generate a feedback report.", "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            int sessionID = (int) sessionsTable.getValueAt(selectedSessionRow, 0);
-//            String author = managerName; // Assuming managerName is available as a field in the class
-//
-//            Report report = reportController.generateSessionFeedbackReport(sessionID, author);
-//            JOptionPane.showMessageDialog(this, "Feedback report generated successfully!\nReport ID: " + report.getReportID(), "Success", JOptionPane.INFORMATION_MESSAGE);
-//            refreshReportsTable();
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error generating feedback report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//    private void generateAttendanceReport() {
-//        try {
-//            int selectedConferenceRow = conferenceTable.getSelectedRow();
-//            if (selectedConferenceRow == -1) {
-//                JOptionPane.showMessageDialog(this, "Please select a conference to generate an attendance report.", "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            int conferenceID = (int) conferenceTable.getValueAt(selectedConferenceRow, 0);
-//            String author = managerName; // Assuming managerName is available as a field in the class
-//
-//            Report report = reportController.generateConferenceAttendanceReport(conferenceID, author);
-//            JOptionPane.showMessageDialog(this, "Attendance report generated successfully!\nReport ID: " + report.getReportID(), "Success", JOptionPane.INFORMATION_MESSAGE);
-//            refreshReportsTable();
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error generating attendance report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//    private void refreshReportsTable() {
-//        try {
-//            DefaultTableModel model = (DefaultTableModel) reportsTable.getModel();
-//            model.setRowCount(0); // Clear existing rows
-//            List<Report> reports = reportController.listAllReports();
-//
-//            for (Report report : reports) {
-//                model.addRow(new Object[]{
-//                        report.getReportID(),
-//                        report.getAuthor(),
-//                        report.getGeneratedDate(),
-//                        report.getContent()
-//                });
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error refreshing reports table: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//
-//
-//    private void initializeProfilePanel() {
-//        lblManagerName.setText("Manager Name: ");
-//        lblManagerEmail.setText("Email: ");
-//        lblConferencesManaged.setText("Conferences Managed: 0");
-//
-//        profilePanel.add(lblManagerName);
-//        profilePanel.add(lblManagerEmail);
-//        profilePanel.add(lblConferencesManaged);
-//
-//
-//        profilePanel.add(logoutButton);
-//
-//        logoutButton.addActionListener(e -> logout());
-//    }
-//
-//    private void refreshDashboardData() {
-//        // Populate statistics and upcoming sessions table
-//    }
-//
-//    private void logout() {
-////        dispose();
-////        new LoginUI().setVisible(true); // Redirect to login
-//    }
+
+
+    // Get Selected Session ID
+    private int getSelectedReportSessionID() {
+        try {
+            String selectedSession = (String) reportSessionDropdown.getSelectedItem();
+            if (selectedSession == null || selectedSession.isEmpty()) {
+                throw new IllegalArgumentException("No session selected.");
+            }
+
+            // Extract the numeric ID from the selected item
+            String idString = selectedSession.replaceAll(".*\\(ID: (\\d+)\\).*", "$1");
+            if (idString.isEmpty()) {
+                throw new IllegalArgumentException("Invalid session selection.");
+            }
+
+            return Integer.parseInt(idString);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error fetching selected session ID: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            throw e; // Re-throw to prevent further processing
+        }
+    }
+
+
+
+    // Generate Feedback Report
+    private void generateFeedbackReport() {
+        try {
+            int sessionID = getSelectedReportSessionID();
+            ReportDTO report = reportController.generateSessionFeedbackReport(sessionID, managerName);
+            JOptionPane.showMessageDialog(this, "Feedback Report Generated: " + report.getReportID(),
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            refreshReportsTable();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error generating feedback report: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Generate Session Attendance Report
+    private void generateSessionAttendanceReport() {
+        try {
+            int sessionID = getSelectedReportSessionID();
+            if (sessionID <= 0) {
+                JOptionPane.showMessageDialog(this, "Please select a session.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Call the report controller to generate the report
+            ReportDTO report = reportController.generateSessionAttendanceReport(sessionID, managerName);
+            if (report != null) {
+                JOptionPane.showMessageDialog(this, "Session Attendance Report Generated: " + report.getReportID(),
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                refreshReportsTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to generate session attendance report.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error generating session attendance report: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+
+    // Generate Attendance Report
+    private void generateConferenceAttendanceReport() {
+        try {
+            int conferenceID = getSelectedReportConferenceID();
+            if (conferenceID <= 0) {
+                JOptionPane.showMessageDialog(this, "Invalid conference selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            ReportDTO report = reportController.generateConferenceAttendanceReport(conferenceID, managerName);
+            if (report != null) {
+                JOptionPane.showMessageDialog(this, "Attendance Report Generated: " + report.getReportID(),
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                refreshReportsTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to generate attendance report.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error generating attendance report: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    // Refresh Reports Table
+    private void refreshReportsTable() {
+        try {
+            List<ReportDTO> reports = reportController.listAllReports();
+            DefaultTableModel model = (DefaultTableModel) reportsTable.getModel();
+            model.setRowCount(0); // Clear existing rows
+
+            if (reports == null){
+                return;
+            }
+            for (ReportDTO report : reports) {
+                model.addRow(new Object[]{
+                        report.getReportID(),
+                        report.getReportType(),
+                        report.getGeneratedDate()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error refreshing reports table: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // View Selected Report
+    private void viewSelectedReport() {
+        try {
+            int selectedRow = reportsTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Please select a report to view.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int reportID = (int) reportsTable.getValueAt(selectedRow, 0);
+            ReportDTO report = reportController.viewReportDetails(reportID);
+
+            if (report != null) {
+                JOptionPane.showMessageDialog(this, "Report Content:\n" + report.getContent(),
+                        "Report Details", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Report not found or invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error viewing report: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void initializeProfilePanel(int managerID, String managerName, String managerEmail) {
+        lblManagerID.setText("Manager ID: " + managerID);
+        lblManagerName.setText("Manager Name: " + managerName);
+        lblManagerEmail.setText("Manager Email: " + managerEmail);
+
+        logoutButton.addActionListener(e -> logout());
+    }
+
+
+    private void logout() {
+        logoutHelper.performLogout(this, managerID, managerName, managerEmail, Role.ATTENDEE);
+    }
+
+
+
+
 }

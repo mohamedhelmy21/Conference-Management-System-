@@ -5,10 +5,12 @@ import controller.SpeakerController;
 import controller.UserController;
 import dto.*;
 import enums.Rating;
+import enums.Role;
 import intializer.AppInitializer;
 import service.AttendeeService;
 import service.LoginService;
 import service.SpeakerService;
+import utility.LogoutHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -39,19 +41,24 @@ public class AttendeePortalUI extends JFrame {
     private JLabel attendeeNameLabel;
     private JLabel attendeeEmailLabel;
 
+    private final LogoutHelper logoutHelper;
+
     private final AttendeeController attendeeController;
     private final UserController userController;
     private final int attendeeID;
     private final String attendeeName;
     private final String attendeeEmail;
     private int conferenceID;
+    private UserDTO attendee;
 
-    public AttendeePortalUI(AttendeeController attendeeController, UserController userController, int attendeeID, String attendeeName, String attendeeEmail) {
+    public AttendeePortalUI(AttendeeController attendeeController, UserController userController, UserDTO attendee) {
+        this.logoutHelper = new LogoutHelper(userController);
         this.attendeeController = attendeeController;
         this.userController = userController;
-        this.attendeeID = attendeeID;
-        this.attendeeName = attendeeName;
-        this.attendeeEmail = attendeeEmail;
+        this.attendee = attendee;
+        this.attendeeID = attendee.getUserID();
+        this.attendeeName = attendee.getName();
+        this.attendeeEmail = attendee.getEmail();
         this.conferenceID = attendeeController.getAttendeeConferenceID(attendeeID);
 
 
@@ -219,33 +226,8 @@ public class AttendeePortalUI extends JFrame {
         }
     }
 
-    private void logout(){
-        try {
-            // Create a temporary UserDTO with attendee details
-            UserDTO userDTO = new UserDTO(attendeeID, attendeeName, "", enums.Role.ATTENDEE);
-
-            // Perform logout
-            userController.logout(userDTO);
-
-            // Close the Attendee UI
-            dispose();
-
-            AppInitializer appInitializer = new AppInitializer();
-            appInitializer.initialize();
-            LoginService loginService = appInitializer.getLoginService();
-            UserController userController = new UserController(loginService);
-            AttendeeService attendeeService = appInitializer.getAttendeeService();
-            AttendeeController attendeeController = new AttendeeController(attendeeService);
-            SpeakerService speakerService = appInitializer.getSpeakerService();
-            SpeakerController speakerController = new SpeakerController(speakerService);
-            LoginUI loginUI = new LoginUI(userController);
-            loginUI.attendeeController = attendeeController;
-            loginUI.speakerController = speakerController;
-            loginUI.setVisible(true);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(AttendeePortalUI.this, "Error logging out: " + ex.getMessage(),
-                    "Logout Error", JOptionPane.ERROR_MESSAGE);
-        }
+    private void logout() {
+        logoutHelper.performLogout(this, attendeeID, attendeeName, attendeeEmail, Role.ATTENDEE);
     }
 
     private void signUpForConference() {

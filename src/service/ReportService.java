@@ -3,10 +3,12 @@ package service;
 import domain.Report;
 import dto.ConferenceDTO;
 import dto.FeedbackDTO;
+import dto.ReportDTO;
 import dto.SessionDTO;
+import enums.ReportType;
+import exception.RepositoryException;
 import repository.ReportRepository;
 import utility.IDGenerator;
-import exception.RepositoryException;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +30,7 @@ public class ReportService {
     }
 
     // Generate Feedback Report for a Session
-    public Report generateSessionFeedbackReport(int sessionID, String author) {
+    public ReportDTO generateSessionFeedbackReport(int sessionID, String author) {
         try {
             SessionDTO session = sessionService.viewSessionDetails(sessionID);
             List<FeedbackDTO> feedbackList = feedbackService.getSessionFeedbacks(sessionID);
@@ -50,18 +52,18 @@ public class ReportService {
             // Create report
             int reportID = IDGenerator.generateId("Report");
             String content = "Session Feedback Report for " + session.getName() + ":\n" + feedbackContent;
-            Report report = new Report(reportID, content, author, (int) averageRating);
 
-            // Save report
+            Report report = new Report(reportID, ReportType.FEEDBACK, content, author);
+            report.setAverageRating((int) averageRating);
             reportRepository.save(report);
-            return report;
+
+            return mapToDTO(report);
         } catch (IOException e) {
             throw new RepositoryException("Error generating session feedback report.", e);
         }
     }
 
-    // Generate Attendance Report for a Conference
-    public Report generateConferenceAttendanceReport(int conferenceID, String author) {
+    public ReportDTO generateConferenceAttendanceReport(int conferenceID, String author) {
         try {
             ConferenceDTO conference = conferenceService.getConferenceDetails(conferenceID);
             if (conference == null) {
@@ -73,41 +75,80 @@ public class ReportService {
                     .map(attendeeService::getAttendeeName)
                     .collect(Collectors.toList());
 
-            // Create report
             int reportID = IDGenerator.generateId("Report");
             String content = "Attendance Report for " + conference.getName() + ":\n" +
                     String.join("\n", attendeeNames);
 
-            Report report = new Report(reportID, content, author);
-
-            // Save report
+            Report report = new Report(reportID, ReportType.ATTENDANCE, content, author);
             reportRepository.save(report);
-            return report;
+
+            return mapToDTO(report);
         } catch (IOException e) {
             throw new RepositoryException("Error generating conference attendance report.", e);
         }
     }
 
+    public ReportDTO generateSessionAttendanceReport(int sessionID, String author) {
+        try {
+            SessionDTO session = sessionService.viewSessionDetails(sessionID);
+            if (session == null) {
+                throw new IllegalArgumentException("Session not found with ID: " + sessionID);
+            }
+
+            List<Integer> attendeeIDs = sessionService.getAttendedAttendees(sessionID);
+            List<String> attendeeNames = attendeeIDs.stream()
+                    .map(attendeeService::getAttendeeName)
+                    .collect(Collectors.toList());
+
+            int reportID = IDGenerator.generateId("Report");
+            String content = "Session Attendance Report for " + session.getName() + ":\n" +
+                    String.join("\n", attendeeNames);
+
+            Report report = new Report(reportID, ReportType.ATTENDANCE, content, author);
+            reportRepository.save(report);
+
+            return mapToDTO(report);
+        } catch (IOException e) {
+            throw new RepositoryException("Error generating session attendance report.", e);
+        }
+    }
+
+
     // Retrieve Report by ID
-    public Report getReportById(int reportID) {
+    public ReportDTO getReportById(int reportID) {
         try {
             Report report = reportRepository.findById(reportID);
             if (report == null) {
                 throw new IllegalArgumentException("Report not found with ID: " + reportID);
             }
-            return report;
+            return mapToDTO(report);
         } catch (IOException e) {
             throw new RepositoryException("Error retrieving report.", e);
         }
     }
 
     // List All Reports
-    public List<Report> listAllReports() {
+    public List<ReportDTO> listAllReports() {
         try {
-            return reportRepository.findAll();
+            List<Report> reports = reportRepository.findAll();
+            return reports.stream()
+                    .map(this::mapToDTO)
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RepositoryException("Error retrieving all reports.", e);
         }
     }
-}
 
+    // Map Report to ReportDTO
+    private ReportDTO mapToDTO(Report report) {
+        return new ReportDTO(
+                report.getReportID(),
+                report.getReportType(),
+                report.getContent(),
+                report.getAuthor(),
+                report.getGeneratedDate(),
+                report.getReportType() == ReportType.ATTENDANCE ? report.getAverageRating() : 0);
+    }
+
+
+}

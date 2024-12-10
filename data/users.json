@@ -5,27 +5,27 @@
   "password" : "password",
   "role" : "MANAGER"
 }, {
-  "userID" : 23,
-  "name" : "Peter Parker",
-  "email" : "spiderman@gmail.com",
+  "userID" : 26,
+  "name" : "John Doe",
+  "email" : "john@example.com",
   "password" : "123",
   "role" : "SPEAKER",
-  "bio" : "yapper",
-  "expertise" : "web shooting",
-  "organization" : "starlabs",
-  "sessionsIDs" : [ 17, 10, 16 ]
+  "bio" : "N/A",
+  "expertise" : "N/A",
+  "organization" : "N/A",
+  "sessionsIDs" : [ 18 ]
 }, {
-  "userID" : 25,
+  "userID" : 27,
   "name" : "mohamed",
   "email" : "mohamed@gmail.com",
   "password" : "123",
   "role" : "ATTENDEE",
   "schedule" : {
-    "scheduleID" : 25,
-    "attendeeID" : 25,
-    "sessionsIDs" : [ 16, 10 ]
+    "scheduleID" : 27,
+    "attendeeID" : 27,
+    "sessionsIDs" : [ 18 ]
   },
-  "feedbacks" : [ 7 ],
+  "feedbacks" : [ 8 ],
   "certificate" : -1,
-  "conferenceID" : 4
+  "conferenceID" : 5
 } ]

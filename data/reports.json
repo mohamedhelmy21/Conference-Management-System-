@@ -1,13 +1,15 @@
 [ {
-  "reportID" : 1,
-  "content" : "Session Feedback Report for Introduction to AI:\nComment: Great session! | Rating: FIVE",
-  "generatedDate" : "2024-12-06T18:05:49.3284213",
-  "author" : "Manager",
-  "averageRating" : 5
-}, {
-  "reportID" : 2,
-  "content" : "Attendance Report for AI Summit 2025:\nJohn Doe",
-  "generatedDate" : "2024-12-06T18:05:49.4386051",
-  "author" : "Manager",
+  "reportID" : 6,
+  "reportType" : "ATTENDANCE",
+  "content" : "Session Attendance Report for Testing Session1:\nmohamed",
+  "generatedDate" : "2024-12-10T20:13:02.969165",
+  "author" : "Nancy",
   "averageRating" : 0
+}, {
+  "reportID" : 7,
+  "reportType" : "FEEDBACK",
+  "content" : "Session Feedback Report for Testing Session1:\nComment: Testing Feedback | Rating: FOUR",
+  "generatedDate" : "2024-12-10T20:14:47.8830617",
+  "author" : "Nancy",
+  "averageRating" : 4
 } ]

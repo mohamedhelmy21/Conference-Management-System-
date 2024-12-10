@@ -23,12 +23,12 @@ public class LoginUI extends JFrame {
     private JButton registerButton;
 
     private UserController userController;
-    AttendeeController attendeeController;
-    SpeakerController speakerController;
-    ConferenceManagerController conferenceManagerController;
-    ConferenceController conferenceController;
-    SessionController sessionController;
-    ReportController reportController;
+    public AttendeeController attendeeController;
+    public SpeakerController speakerController;
+    public ConferenceManagerController conferenceManagerController;
+    public ConferenceController conferenceController;
+    public SessionController sessionController;
+    public ReportController reportController;
 
 
     public LoginUI(UserController userController) {
@@ -63,16 +63,15 @@ public class LoginUI extends JFrame {
                 // Redirect based on role
                 switch (user.getRole()) {
                     case ATTENDEE:
-                        AttendeePortalUI attendeeUI = new AttendeePortalUI(attendeeController, userController, user.getUserID(), user.getName(), user.getEmail());
+                        AttendeePortalUI attendeeUI = new AttendeePortalUI(attendeeController, userController, user);
                         attendeeUI.setVisible(true);
                         break;
                     case SPEAKER:
-                        SpeakerPortalUI speakerUI = new SpeakerPortalUI(speakerController, userController, user.getUserID(), user.getName());
+                        SpeakerPortalUI speakerUI = new SpeakerPortalUI(speakerController, userController, user);
                         speakerUI.setVisible(true);
                         break;
                     case MANAGER:
-                        ManagerPortalUI managerUI = new ManagerPortalUI(conferenceManagerController, conferenceController,  sessionController, speakerController, reportController, attendeeController, user.getUserID()
-                        );
+                        ManagerPortalUI managerUI = new ManagerPortalUI(userController, conferenceManagerController, conferenceController,  sessionController, speakerController, reportController, attendeeController, user);
                         managerUI.setVisible(true);
                         break;
                     default:
